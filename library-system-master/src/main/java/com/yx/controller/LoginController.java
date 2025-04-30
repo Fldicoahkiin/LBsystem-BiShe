@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,16 +26,28 @@ public class LoginController {
     private AdminService adminService;
     @Autowired
     private ReaderInfoService readerService;
+
+    /**
+     * 根路径重定向到登录页面
+     * 
+     * @return
+     */
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/login";
+    }
+
     /**
      * 登录页面的转发
      */
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 
     /**
      * 获取验证码方法
+     * 
      * @param request
      * @param response
      */
@@ -42,18 +55,18 @@ public class LoginController {
     public void verifyCode(HttpServletRequest request, HttpServletResponse response) {
         IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
         try {
-            //设置长宽
+            // 设置长宽
             VerifyCode verifyCode = iVerifyCodeGen.generate(80, 28);
             String code = verifyCode.getCode();
-            //将VerifyCode绑定session
+            // 将VerifyCode绑定session
             request.getSession().setAttribute("VerifyCode", code);
-            //设置响应头
+            // 设置响应头
             response.setHeader("Pragma", "no-cache");
-            //设置响应头
+            // 设置响应头
             response.setHeader("Cache-Control", "no-cache");
-            //在代理服务器端防止缓冲
+            // 在代理服务器端防止缓冲
             response.setDateHeader("Expires", 0);
-            //设置响应内容类型
+            // 设置响应内容类型
             response.setContentType("image/jpeg");
             response.getOutputStream().write(verifyCode.getImgBytes());
             response.getOutputStream().flush();
@@ -63,54 +76,67 @@ public class LoginController {
     }
 
     /**
-     * 登录验证
+     * 登录验证 - 只处理 POST 请求
      */
-    @RequestMapping("/loginIn")
-    public String loginIn(HttpServletRequest request, Model model){
-        //获取用户名与密码
+    @PostMapping("/loginIn")
+    public String loginIn(HttpServletRequest request, Model model) {
+        // 获取用户名与密码
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String code=request.getParameter("captcha");
-        String type=request.getParameter("type");
+        String code = request.getParameter("captcha");
+        String type = request.getParameter("type");
 
-        //判断验证码是否正确（验证码已经放入session）
+        // 判断验证码是否正确（验证码已经放入session）
         HttpSession session = request.getSession();
-        String realCode = (String)session.getAttribute("VerifyCode");
-        if (!realCode.toLowerCase().equals(code.toLowerCase())){
-            model.addAttribute("msg","验证码不正确");
+        String realCode = (String) session.getAttribute("VerifyCode");
+
+        // 增加对 realCode 的 null 检查
+        if (realCode == null) {
+            model.addAttribute("msg", "验证码已过期，请刷新页面重试");
             return "login";
-        }else{
-            //验证码正确则判断用户名和密码
-            if(type.equals("1")){//管理员信息
-                //用户名和密码是否正确
-                Admin admin=adminService.queryUserByNameAndPassword(username,password);
-                if(admin==null){//该用户不存在
-                    model.addAttribute("msg","用户名或密码错误");
+        }
+        // 增加对 code (用户输入) 的 null 检查
+        if (code == null || code.trim().isEmpty()) { // 同时检查空字符串
+            model.addAttribute("msg", "请输入验证码");
+            return "login";
+        }
+
+        if (!realCode.equalsIgnoreCase(code)) { // 使用 equalsIgnoreCase 替代两次 toLowerCase
+            model.addAttribute("msg", "验证码不正确");
+            return "login";
+        } else {
+            // 验证码正确则判断用户名和密码
+            if (type.equals("1")) {// 管理员信息
+                // 用户名和密码是否正确
+                Admin admin = adminService.queryUserByNameAndPassword(username, password);
+                if (admin == null) {// 该用户不存在
+                    model.addAttribute("msg", "用户名或密码错误");
                     return "login";
                 }
-                session.setAttribute("user",admin);
-                session.setAttribute("type","admin");
-            }else{//来自读者信息表
-                ReaderInfo readerInfo=readerService.queryUserInfoByNameAndPassword(username,password);
-                if(readerInfo==null){
-                    model.addAttribute("msg","用户名或密码错误");
+                session.setAttribute("user", admin);
+                session.setAttribute("type", "admin");
+            } else {// 来自读者信息表
+                ReaderInfo readerInfo = readerService.queryUserInfoByNameAndPassword(username, password);
+                if (readerInfo == null) {
+                    model.addAttribute("msg", "用户名或密码错误");
                     return "login";
                 }
-                session.setAttribute("user",readerInfo);
-                session.setAttribute("type","reader");
+                session.setAttribute("user", readerInfo);
+                session.setAttribute("type", "reader");
             }
 
-            return "index";
+            return "redirect:/index";
         }
     }
+
     /**
      * 退出功能
      */
     @GetMapping("loginOut")
-    public String loginOut(HttpServletRequest request){
+    public String loginOut(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session.invalidate();//注销
-        return "/login";
+        session.invalidate();// 注销
+        return "redirect:/login";
     }
 
 }

@@ -3,6 +3,7 @@ package com.yx.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yx.dao.BookInfoMapper;
+import com.yx.dao.LendListMapper;
 import com.yx.po.BookInfo;
 import com.yx.service.BookInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ public class BookInfoServiceImpl implements BookInfoService {
 
     @Autowired
     private BookInfoMapper bookInfoMapper;
+    @Autowired
+    private LendListMapper lendListMapper;
 
     @Override
     public PageInfo<BookInfo> queryBookInfoAll(BookInfo bookInfo, Integer pageNum, Integer limit) {
-        PageHelper.startPage(pageNum,limit);
+        PageHelper.startPage(pageNum, limit);
         List<BookInfo> bookInfoList = bookInfoMapper.queryBookInfoAll(bookInfo);
         return new PageInfo<>(bookInfoList);
     }
@@ -40,7 +43,7 @@ public class BookInfoServiceImpl implements BookInfoService {
 
     @Override
     public void deleteBookByIds(List<String> ids) {
-        for (String id : ids){
+        for (String id : ids) {
             bookInfoMapper.deleteByPrimaryKey(Integer.parseInt(id));
         }
     }
@@ -48,5 +51,10 @@ public class BookInfoServiceImpl implements BookInfoService {
     @Override
     public List<BookInfo> getBookCountByType() {
         return bookInfoMapper.getBookCountByType();
+    }
+
+    @Override
+    public List<BookInfo> queryHotBooks(int limit) {
+        return lendListMapper.queryHotBooks(limit);
     }
 }

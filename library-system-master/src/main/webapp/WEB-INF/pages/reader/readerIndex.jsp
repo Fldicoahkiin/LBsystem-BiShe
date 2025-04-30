@@ -51,6 +51,7 @@
 
         <script type="text/html" id="currentTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="update">修改</a>
+            <a class="layui-btn layui-btn-warm layui-btn-xs data-count-password" lay-event="updatePassword">改密</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
@@ -140,6 +141,24 @@
                     //调用删除功能
                     deleteInfoByIds(data.id,index);
                     layer.close(index);
+                });
+            } else if (obj.event === 'updatePassword') { // 监听修改密码操作
+                layer.prompt({title: '请输入 '+ data.username +' 的新密码', formType: 1}, function(pass, index){
+                    layer.close(index);
+                    // 发起请求修改密码
+                    $.ajax({
+                        url: "${pageContext.request.contextPath}/updateReaderPassword",
+                        type: "POST",
+                        contentType: 'application/json',
+                        data: JSON.stringify({id: data.id, password: pass}),
+                        success: function(result){
+                            if(result.code == 0){
+                                layer.msg("密码修改成功");
+                            } else {
+                                layer.msg(result.msg || "密码修改失败");
+                            }
+                        }
+                    });
                 });
             }
         });

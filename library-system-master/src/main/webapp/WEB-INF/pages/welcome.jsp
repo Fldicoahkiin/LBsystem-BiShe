@@ -36,28 +36,72 @@
             padding-right: 70px !important;text-overflow:ellipsis!important;overflow:hidden!important;white-space:nowrap!important;}
         .layuimini-notice-title {line-height:28px;font-size:14px;}
         .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
+        .hot-books-panel .layui-card-header {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .hot-books-panel .layui-card-body ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .hot-books-panel .layui-card-body li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .hot-books-panel .layui-card-body li:last-child {
+            border-bottom: none;
+        }
+         .hot-books-panel .book-title {
+             font-weight: bold;
+             margin-right: 10px;
+         }
+          .hot-books-panel .book-author {
+             color: #666;
+             font-size: 13px;
+         }
     </style>
 </head>
 <body>
 <div class="layuimini-container">
-
-            <div class="layui-col-md4">
-
-                <div class="layui-card">
-                    <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
-                        <div class="layui-card-body layui-text">
-                            <c:forEach var="notice" items="${noticeList}">
-                                <div class="layuimini-notice">
-                                    <div class="layuimini-notice-title">${notice.topic}</div>
-                                    <div class="layuimini-notice-extra"><fmt:formatDate value="${notice.createDate}" pattern="yyyy-MM-dd HH:mm:ss" /></div>
-                                    <div class="layuimini-notice-content layui-hide">
-                                        ${notice.content}
-                                    </div>
+    <div class="layuimini-main">
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
+                    <div class="layui-card-body layui-text">
+                        <c:forEach var="notice" items="${noticeList}">
+                            <div class="layuimini-notice">
+                                <div class="layuimini-notice-title">${notice.topic}</div>
+                                <div class="layuimini-notice-extra"><fmt:formatDate value="${notice.createDate}" pattern="yyyy-MM-dd HH:mm:ss" /></div>
+                                <div class="layuimini-notice-content layui-hide">
+                                    ${notice.content}
                                 </div>
-                            </c:forEach>
-                        </div>
+                            </div>
+                        </c:forEach>
                     </div>
+                </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <div class="layui-card hot-books-panel">
+                <div class="layui-card-header"><i class="fa fa-fire icon"></i>热门图书</div>
+                <div class="layui-card-body">
+                    <c:if test="${not empty hotBookList}">
+                        <ul>
+                            <c:forEach items="${hotBookList}" var="book" varStatus="status">
+                                <li>
+                                    ${status.count}. <span class="book-title">${book.name}</span>
+                                    <span class="book-author">(${book.author})</span>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
+                    <c:if test="${empty hotBookList}">
+                        <p>暂无热门图书推荐</p>
+                    </c:if>
+                </div>
             </div>
+        </div>
+    </div>
 </div>
 <script src="${pageContext.request.contextPath}/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script src="${pageContext.request.contextPath}/js/lay-config.js?v=1.0.4" charset="utf-8"></script>

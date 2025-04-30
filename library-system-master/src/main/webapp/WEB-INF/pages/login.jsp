@@ -69,7 +69,12 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
+                    <hr class="hr15">
                     <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" lay-submit="" lay-filter="login">登录</button>
+                    <hr class="hr20">
+                    <div style="text-align: center;">
+                        <a href="${pageContext.request.contextPath}/register" style="color: #1E9FFF;">还没有账号？立即注册</a>
+                    </div>
                 </div>
             </form>
         </div>

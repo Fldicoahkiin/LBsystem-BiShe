@@ -1,6 +1,7 @@
 package com.yx.dao;
 
 import com.yx.po.LendList;
+import com.yx.po.BookInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -59,7 +60,6 @@ public interface LendListMapper {
      */
     List<LendList> queryLendListAll(LendList lendList);
 
-
     /**
      * 查询借阅阅时间线（一本书什么时候被借走过）
      */
@@ -69,5 +69,13 @@ public interface LendListMapper {
      * 还书操作(正常还)
      */
     void updateLendListSubmit(LendList lendList);
+
+    /**
+     * 查询借阅次数最多的图书信息
+     * 
+     * @param limit 返回的图书数量
+     * @return 热门图书列表
+     */
+    List<BookInfo> queryHotBooks(@Param("limit") int limit);
 
 }

@@ -10,12 +10,13 @@ public interface BookInfoService {
     /**
      * 查询所有记录
      */
-    PageInfo<BookInfo> queryBookInfoAll(BookInfo bookInfo,Integer pageNum,Integer limit);
+    PageInfo<BookInfo> queryBookInfoAll(BookInfo bookInfo, Integer pageNum, Integer limit);
 
     /**
      * 添加图书记录
      */
     void addBookSubmit(BookInfo bookInfo);
+
     /**
      * 修改 根据id查询记录信息
      */
@@ -35,4 +36,12 @@ public interface BookInfoService {
      * 根据类型获取图书数量
      */
     List<BookInfo> getBookCountByType();
+
+    /**
+     * 获取热门图书列表
+     * 
+     * @param limit 获取的数量
+     * @return 热门图书列表
+     */
+    List<BookInfo> queryHotBooks(int limit);
 }

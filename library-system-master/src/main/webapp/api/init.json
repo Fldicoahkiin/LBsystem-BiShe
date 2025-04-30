@@ -45,6 +45,12 @@
               "icon": "fa fa-bell",
               "target": "_self"
             },
+            {
+                "title": "反馈管理",
+                "href": "admin/feedbackListIndex",
+                "icon": "fa fa-commenting",
+                "target": "_self"
+            },
         {
           "title": "管理员管理",
           "href": "adminIndex",

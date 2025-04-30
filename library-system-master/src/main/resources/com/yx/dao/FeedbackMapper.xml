@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.FeedbackMapper">
+
+    <resultMap id="BaseResultMap" type="com.yx.po.Feedback">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="reader_id" property="readerId" jdbcType="INTEGER"/>
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="submission_time" property="submissionTime" jdbcType="TIMESTAMP"/>
+        <!-- 关联查询读者姓名 -->
+        <result column="realName" property="readerName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        f.id, f.reader_id, f.content, f.submission_time
+    </sql>
+
+    <insert id="insertFeedback" parameterType="com.yx.po.Feedback">
+        insert into feedback (reader_id, content)
+        values (#{readerId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+    </insert>
+
+    <select id="queryFeedbackList" resultMap="BaseResultMap" parameterType="com.yx.po.Feedback">
+        select
+        <include refid="Base_Column_List"/>
+        ,r.realName
+        from feedback f
+        join reader_info r on f.reader_id = r.id
+        <where>
+            <if test="content != null and content != ''">
+                and f.content like concat('%', #{content}, '%')
+            </if>
+            <if test="readerName != null and readerName != ''">
+                 and r.realName like concat('%', #{readerName}, '%')
+            </if>
+        </where>
+        order by f.submission_time desc
+    </select>
+
+     <select id="queryFeedbackCount" resultType="java.lang.Integer" parameterType="com.yx.po.Feedback">
+        select count(1)
+        from feedback f
+        join reader_info r on f.reader_id = r.id
+         <where>
+            <if test="content != null and content != ''">
+                and f.content like concat('%', #{content}, '%')
+            </if>
+            <if test="readerName != null and readerName != ''">
+                 and r.realName like concat('%', #{readerName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryFeedbackById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,r.realName
+        from feedback f
+        join reader_info r on f.reader_id = r.id
+        where f.id = #{id,jdbcType=INTEGER}
+    </select>
+
+</mapper> 

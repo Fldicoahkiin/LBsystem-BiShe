@@ -247,4 +247,20 @@
     order by lend.id desc
   </select>
 
+  <!-- 查询热门图书 -->
+  <select id="queryHotBooks" resultType="com.yx.po.BookInfo">
+    SELECT
+      b.id, b.name, b.author, b.publish, b.ISBN, b.introduction, b.language, b.price, b.publish_date, b.type_id, b.status,
+      count(l.bookId) as borrow_count
+    FROM
+      lend_list l
+    JOIN
+      book_info b ON l.bookId = b.id
+    GROUP BY
+      l.bookId
+    ORDER BY
+      borrow_count DESC
+    LIMIT #{limit}
+  </select>
+
 </mapper>

@@ -22,13 +22,26 @@
               "target": "_self"
           },
           {
-            "title": "借阅管理",
-            "href": "queryLookBookList2",
-            "icon": "fa fa-gears",
-            "target": "_self"
+              "title": "问题反馈",
+              "href": "readerFeedback",
+              "icon": "fa fa-pencil-square-o",
+              "target": "_self"
           }
       ]
+    },
+    {
+      "title": "我的借阅信息",
+      "icon": "fa fa-lemon-o",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "借阅信息",
+          "href": "queryLookBookList2",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        }
+      ]
     }
-
   ]
 }

@@ -63,4 +63,12 @@ public interface ReaderInfoMapper {
      * 根据用户名和密码查询用户信息
      */
     ReaderInfo queryUserInfoByNameAndPassword(@Param("username") String username, @Param("password") String password);
+
+    /**
+     * 根据用户名查询用户信息
+     * 
+     * @param username 用户名
+     * @return 读者信息，如果不存在则返回 null
+     */
+    ReaderInfo queryByUsername(@Param("username") String username);
 }

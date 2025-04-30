@@ -221,7 +221,18 @@
         </where>
 
   </select>
-  <select id="queryUserInfoByNameAndPassword" resultType="com.yx.po.ReaderInfo">
-    select * from reader_info where username=#{username} and password=#{password}
+  <select id="queryUserInfoByNameAndPassword" resultMap="BaseResultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />
+    from reader_info
+    where username = #{username,jdbcType=VARCHAR} and password=#{password,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 根据用户名查询用户信息 -->
+  <select id="queryByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from reader_info
+    where username = #{username,jdbcType=VARCHAR}
   </select>
 </mapper>
