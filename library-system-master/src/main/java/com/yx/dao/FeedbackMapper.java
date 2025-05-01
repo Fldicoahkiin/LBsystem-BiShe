@@ -34,4 +34,11 @@ public interface FeedbackMapper {
      */
     int queryFeedbackCount(Feedback feedback);
 
+    /**
+     * 根据 ID 列表批量删除反馈
+     * 
+     * @param ids ID 列表
+     */
+    void deleteFeedbackByIds(List<Integer> ids);
+
 }

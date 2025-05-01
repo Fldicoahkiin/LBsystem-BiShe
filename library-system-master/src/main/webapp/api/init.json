@@ -47,7 +47,7 @@
             },
             {
                 "title": "反馈管理",
-                "href": "admin/feedbackListIndex",
+                "href": "feedbackList",
                 "icon": "fa fa-commenting",
                 "target": "_self"
             },
@@ -71,6 +71,28 @@
           "title": "统计分析",
           "href": "statisticIndex",
           "icon": "fa fa-superpowers",
+          "target": "_self"
+        }
+      ]
+    }
+  ],
+  "readerMenuInfo": [
+    {
+      "title": "常用功能",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "图书借阅",
+          "href": "readerBookIndex",
+          "icon": "fa fa-search",
+          "target": "_self"
+        },
+        {
+          "title": "问题反馈",
+          "href": "feedbackAddReader",
+          "icon": "fa fa-pencil-square-o",
           "target": "_self"
         }
       ]

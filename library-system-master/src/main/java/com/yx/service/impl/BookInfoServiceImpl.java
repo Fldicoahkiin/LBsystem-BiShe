@@ -20,8 +20,8 @@ public class BookInfoServiceImpl implements BookInfoService {
     private LendListMapper lendListMapper;
 
     @Override
-    public PageInfo<BookInfo> queryBookInfoAll(BookInfo bookInfo, Integer pageNum, Integer limit) {
-        PageHelper.startPage(pageNum, limit);
+    public PageInfo<BookInfo> queryBookInfoAll(BookInfo bookInfo, Integer page, Integer limit) {
+        PageHelper.startPage(page, limit);
         List<BookInfo> bookInfoList = bookInfoMapper.queryBookInfoAll(bookInfo);
         return new PageInfo<>(bookInfoList);
     }

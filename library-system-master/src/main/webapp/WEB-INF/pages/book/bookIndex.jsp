@@ -66,7 +66,7 @@
             table = layui.table;
 
         //动态获取图书类型的数据，即下拉菜单，跳出图书类型
-        $.get("findAllList",{},function (data) {
+        $.get("${pageContext.request.contextPath}/findAllList",{},function (data) {
             var list=data;
             var select=document.getElementById("typeId");
             if(list!=null|| list.size()>0){
@@ -83,7 +83,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/bookAll',//查询类型数据
+            url: '${pageContext.request.contextPath}/queryBookInfoAll',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -91,15 +91,21 @@
                 icon: 'layui-icon-tips'
             }],
             cols: [[
-                {type: "checkbox", width: 50},
-                //{field: 'id', width: 100, title: 'ID', sort: true},
-                {field: 'isbn', width: 100, title: '图书编号'},
-                {field: 'name', width: 100, title: '图书名称'},
+                {type: "checkbox", width: 50, fixed: "left"},
+                //{field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'isbn', width: 150, title: 'ISBN'},
+                {field: 'name', width: 150, title: '图书名称'},
+                {field: 'author', width: 120, title: '作者'},
+                {field: 'publish', width: 150, title: '出版社'},
                 {templet:'<div>{{d.typeInfo.name}}</div>',width:100,title:'图书类型'},
-                {field: 'author', width: 80, title: '作者'},
-                {field: 'price', width: 80, title: '价格'},
+                {field: 'price', width: 80, title: '价格', sort: true},
                 {field: 'language', width: 80, title: '语言'},
-                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                {field: 'publishDate', width: 120, title: '出版日期', sort: true},
+                {field: 'introduction', title: '简介', minWidth: 200},
+                {field: 'status', width: 100, title: '状态', templet: function(d){
+                    return d.status == 0 ? '<span class=\"layui-badge layui-bg-green\">未借出</span>' : '<span class=\"layui-badge layui-bg-red\">已借出</span>';
+                }},
+                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center", fixed: "right"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,  <!--默认显示15条-->
@@ -184,7 +190,7 @@
         function deleteInfoByIds(ids ,index){
             //向后台发送请求
             $.ajax({
-                url: "deleteBook",
+                url: "${pageContext.request.contextPath}/deleteBook",
                 type: "POST",
                 data: {ids: ids},
                 success: function (result) {

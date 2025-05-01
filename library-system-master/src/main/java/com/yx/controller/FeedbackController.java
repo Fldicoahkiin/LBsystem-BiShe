@@ -23,10 +23,10 @@ public class FeedbackController {
     /**
      * 跳转到读者反馈页面
      */
-    @GetMapping("/readerFeedback")
+    @GetMapping("/feedbackAddReader")
     public String readerFeedbackPage() {
-        // 返回位于 /WEB-INF/pages/reader/feedbackAdd.jsp 的视图
-        return "reader/feedbackAdd";
+        // 返回位于 /WEB-INF/pages/feedback/feedbackAddReader.jsp 的视图
+        return "feedback/feedbackAddReader";
     }
 
     /**

@@ -59,7 +59,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/admin/queryFeedbackList', // 后端数据接口
+            url: '${pageContext.request.contextPath}/queryFeedbackList', // 移除 /admin 前缀
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
@@ -72,19 +72,20 @@
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
-            page: true
+            page: true,
+            skin: 'line'
         });
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = data.field;
-            //执行搜索重载
             table.reload('currentTableId', {
                 page: {
                     curr: 1
                 }
-                , where: {
-                    readerName: result.readerName
+                , where: { //传递参数
+                    readerName: result.readerName,
+                    content: result.content
                 }
             }, 'data');
 
@@ -107,53 +108,20 @@
          * toolbar监听事件
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'delete') {  // 监听删除按钮
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                if (data.length === 0) {
-                    layer.msg('请选择要删除的反馈');
-                } else {
-                    // 获取选中记录的ID
-                    var ids = data.map(function(item){ return item.id; });
-                    
-                    layer.confirm('确定删除选中的 ' + data.length + ' 条反馈吗？', function (index) {
-                        layer.close(index);
-                        // TODO: 向服务端发送删除请求
-                        // $.ajax({
-                        //     url: '${pageContext.request.contextPath}/admin/deleteFeedbacks',
-                        //     type: 'POST',
-                        //     contentType: 'application/json',
-                        //     data: JSON.stringify(ids),
-                        //     success: function(res){
-                        //         if(res.code == 0){
-                        //             layer.msg('删除成功');
-                        //             table.reload('currentTableId');
-                        //         } else {
-                        //             layer.msg(res.msg || '删除失败');
-                        //         }
-                        //     },
-                        //     error: function(){
-                        //         layer.msg('请求失败');
-                        //     }
-                        // });
-                        layer.msg('批量删除功能暂未实现 (需要后端支持)');
-                    });
+            if (obj.event === 'delete') { // 监听工具栏批量删除按钮
+                var checkStatus = table.checkStatus('currentTableId');
+                var data = checkStatus.data;
+                if(data.length == 0){
+                    layer.msg("请选择要删除的反馈记录",{icon:5});
+                    return;
                 }
+                var ids = data.map(item => item.id); // 获取所有选中行的 id
+                layer.confirm('确定删除选中的 ' + data.length + ' 条反馈记录吗？', function (index) {
+                    deleteFeedbacksByIds(ids.join(',')); // 逗号分隔 ID 字符串
+                    layer.close(index);
+                });
             }
-            // if (obj.event === 'add') { // 监听添加操作
-            //     var index = layer.open({
-            //         title: '添加反馈',
-            //         type: 2,
-            //         shade: 0.2,
-            //         maxmin:true,
-            //         shadeClose: true,
-            //         area: ['100%', '100%'],
-            //         content: '../page/table/add.html',
-            //     });
-            //     $(window).on("resize", function () {
-            //         layer.full(index);
-            //     });
-            // }
+            // Placeholder for other toolbar actions if needed
         });
 
         //监听表格复选框选择
@@ -173,6 +141,37 @@
                 });
             }
         });
+
+        function deleteInfoByIds(ids) {
+             // ... (This function seems for single delete, keep it for now)
+        }
+
+        /**
+         * 批量删除反馈记录
+         * @param ids 逗号分隔的 ID 字符串
+         */
+        function deleteFeedbacksByIds(ids) {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/deleteFeedbacks", // 移除 /adminFeedback 前缀
+                type: "POST",
+                data: {ids: ids}, // Send comma-separated string of IDs
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.msg('批量删除成功', {
+                            icon: 6,
+                            time: 500
+                        }, function () {
+                            table.reload('currentTableId');
+                        });
+                    } else {
+                        layer.msg(result.msg || "批量删除失败", {icon: 5});
+                    }
+                },
+                error: function(){
+                     layer.msg("操作失败，请重试",{icon:5});
+                }
+            });
+        }
 
     });
 </script>

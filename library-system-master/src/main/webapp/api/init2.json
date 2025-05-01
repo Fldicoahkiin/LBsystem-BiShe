@@ -4,29 +4,29 @@
     "href": "welcome"
   },
   "logoInfo": {
-    "title": "图书馆管理",
+    "title": "图书管理",
     "image": "images/favicon.ico",
     "href": ""
   },
   "menuInfo": [
     {
-      "title": "功能管理",
+      "title": "常用功能",
       "icon": "fa fa-address-book",
       "href": "",
       "target": "_self",
       "child": [
-          {
-              "title": "公告管理",
-              "href": "noticeIndexOfReader",
-              "icon": "fa fa-window-maximize",
-              "target": "_self"
-          },
-          {
-              "title": "问题反馈",
-              "href": "readerFeedback",
-              "icon": "fa fa-pencil-square-o",
-              "target": "_self"
-          }
+        {
+          "title": "图书借阅",
+          "href": "readerBookIndex",
+          "icon": "fa fa-search",
+          "target": "_self"
+        },
+        {
+          "title": "问题反馈",
+          "href": "feedbackAddReader",
+          "icon": "fa fa-pencil-square-o",
+          "target": "_self"
+        }
       ]
     },
     {
@@ -37,7 +37,7 @@
       "child": [
         {
           "title": "借阅信息",
-          "href": "queryLookBookList2",
+          "href": "lookBookList",
           "icon": "fa fa-file-text",
           "target": "_self"
         }

@@ -7,12 +7,11 @@ import java.util.List;
 
 public interface LendListService {
 
-    //分页查询
+    // 分页查询
     PageInfo<LendList> queryLendListAll(LendList lendList, int page, int limit);
 
-    //添加借阅记录
+    // 添加借阅记录
     void addLendListSubmit(LendList lendList);
-
 
     /**
      * 删除
@@ -33,4 +32,13 @@ public interface LendListService {
      * 时间线查询
      */
     List<LendList> queryLookBookList(Integer rid, Integer bid);
+
+    /**
+     * 读者借书
+     * 
+     * @param bookId   图书ID
+     * @param readerId 读者ID
+     * @throws RuntimeException 如果图书不存在、已被借出或发生其他错误
+     */
+    void borrowBook(Integer bookId, Integer readerId);
 }

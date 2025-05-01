@@ -9,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 @Controller
-@RequestMapping("/admin") // 添加 Controller 级别的路径映射
 public class AdminFeedbackController {
 
     @Autowired
@@ -19,28 +21,37 @@ public class AdminFeedbackController {
     /**
      * 跳转到管理员反馈管理页面
      */
-    @GetMapping("/feedbackListIndex")
-    public String feedbackListIndex() {
-        // 返回位于 /WEB-INF/pages/admin/feedbackList.jsp 的视图
+    @GetMapping("/feedbackList")
+    public String feedbackList() {
         return "admin/feedbackList";
     }
 
     /**
-     * 查询反馈列表 (供 Layui table 使用)
+     * 查询反馈列表
      */
-    @GetMapping("/queryFeedbackList")
+    @RequestMapping("/queryFeedbackList")
     @ResponseBody
-    public DataInfo queryFeedbackList(Feedback feedback,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "15") Integer limit) {
-        // 为了接收 Layui table 的分页参数，这里参数名用 page 和 limit
-        // feedback 对象中只保留 readerName 作为查询条件
-        Feedback queryParam = new Feedback();
-        queryParam.setReaderName(feedback.getReaderName());
-
-        PageInfo<Feedback> pageInfo = feedbackService.queryFeedbackList(page, limit, queryParam);
-        // 返回 Layui table 需要的格式
+    public DataInfo queryFeedbackList(@RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "15") int limit,
+            Feedback feedback) {
+        // Call service method with matching parameter order
+        PageInfo<Feedback> pageInfo = feedbackService.queryFeedbackList(feedback, page, limit);
         return DataInfo.ok("成功", pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    /**
+     * 根据 ID 列表批量删除反馈
+     */
+    @PostMapping("/deleteFeedbacks")
+    @ResponseBody
+    public DataInfo deleteFeedbacks(@RequestParam("ids") List<Integer> ids) {
+        try {
+            feedbackService.deleteFeedbacksByIds(ids);
+            return DataInfo.ok("批量删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return DataInfo.fail("批量删除失败");
+        }
     }
 
 }

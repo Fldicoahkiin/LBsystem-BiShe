@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.FeedbackMapper"> 
+
+  <!-- Base ResultMap -->
+  <resultMap id="BaseResultMap" type="com.yx.po.Feedback">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="reader_id" jdbcType="INTEGER" property="readerId" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="submission_time" jdbcType="TIMESTAMP" property="submissionTime" />
+     <!-- Assuming association with ReaderInfo for display -->
+     <association property="readerInfo" javaType="com.yx.po.ReaderInfo">
+        <id property="id" column="reader_id"/>
+        <result property="realName" column="realName"/>
+        <result property="readerNumber" column="readerNumber"/>
+    </association>
+  </resultMap>
+
+  <!-- Base Column List -->
+  <sql id="Base_Column_List">
+    f.id, f.reader_id, f.content, f.submission_time
+  </sql>
+
+  <!-- insert -->
+  <insert id="insert" parameterType="com.yx.po.Feedback">
+    insert into feedback (reader_id, content, submission_time)
+    values (#{readerId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}, 
+      #{submissionTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <!-- insertFeedback -->
+  <insert id="insertFeedback" parameterType="com.yx.po.Feedback">
+    insert into feedback
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="readerId != null">
+        reader_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="submissionTime != null">
+        submission_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="readerId != null">
+        #{readerId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="submissionTime != null">
+        #{submissionTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- queryFeedbackList -->
+  <select id="queryFeedbackList" parameterType="com.yx.po.Feedback" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />,
+    r.realName as realName, r.readerNumber as readerNumber
+    FROM feedback f
+    LEFT JOIN reader_info r ON f.reader_id = r.id
+    <where>
+       <if test="readerInfo != null"> 
+           <if test="readerInfo.readerNumber != null and readerInfo.readerNumber != ''">
+                AND r.readerNumber LIKE CONCAT('%', #{readerInfo.readerNumber}, '%')
+           </if>
+           <if test="readerInfo.realName != null and readerInfo.realName != ''">
+                AND r.realName LIKE CONCAT('%', #{readerInfo.realName}, '%')
+           </if>
+       </if>
+       <if test="content != null and content != ''">
+            AND f.content LIKE CONCAT('%', #{content}, '%')
+       </if>
+    </where>
+    ORDER BY f.submission_time DESC
+  </select>
+
+  <!-- queryFeedbackById -->
+  <select id="queryFeedbackById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />,
+    r.realName as realName, r.readerNumber as readerNumber
+    FROM feedback f
+    LEFT JOIN reader_info r ON f.reader_id = r.id
+    where f.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- deleteFeedbackByIds (Added) -->
+  <delete id="deleteFeedbackByIds" parameterType="java.util.List">
+      DELETE FROM feedback WHERE id IN
+      <foreach collection="list" item="item" open="(" separator="," close=")">
+          #{item}
+      </foreach>
+  </delete>
+
+</mapper> 

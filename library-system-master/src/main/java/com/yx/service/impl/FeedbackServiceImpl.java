@@ -7,6 +7,7 @@ import com.yx.po.Feedback;
 import com.yx.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public PageInfo<Feedback> queryFeedbackList(int page, int limit, Feedback feedback) {
+    public PageInfo<Feedback> queryFeedbackList(Feedback feedback, int page, int limit) {
         PageHelper.startPage(page, limit);
         List<Feedback> list = feedbackMapper.queryFeedbackList(feedback);
         return new PageInfo<>(list);
@@ -31,5 +32,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public Feedback queryFeedbackById(Integer id) {
         return feedbackMapper.queryFeedbackById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFeedbacksByIds(List<Integer> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            feedbackMapper.deleteFeedbackByIds(ids);
+        }
     }
 }
