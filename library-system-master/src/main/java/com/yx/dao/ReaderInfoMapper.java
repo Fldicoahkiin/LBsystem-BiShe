@@ -71,4 +71,17 @@ public interface ReaderInfoMapper {
      * @return 读者信息，如果不存在则返回 null
      */
     ReaderInfo queryByUsername(@Param("username") String username);
+
+    /**
+     * 根据年份前缀查询当年最大的读者卡号
+     * 
+     * @param prefix 例如 "RD2025"
+     * @return 当年最大的读者卡号，如 "RD20250006"，如果当年没有则返回 null
+     */
+    String findMaxReaderNumberByYearPrefix(@Param("prefix") String prefix);
+
+    /**
+     * 根据 ID 列表批量查询读者信息
+     */
+    List<ReaderInfo> queryReaderInfoByIds(@Param("ids") List<Integer> ids);
 }

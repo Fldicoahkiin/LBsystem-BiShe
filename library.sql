@@ -1,73 +1,43 @@
-/*
- Navicat MySQL Data Transfer
- 
- Source Server         : localhost_3306
- Source Server Type    : MySQL
- Source Server Version : 50733
- Source Host           : localhost:3306
- Source Schema         : library
- 
- Target Server Type    : MySQL
- Target Server Version : 50733
- File Encoding         : 65001
- 
- Date: 30/04/2025 15:00:00 -- Doubled data records without changing structure
- */
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
--- ----------------------------
--- Table structure for admin
--- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
-  `adminType` int(11) NULL DEFAULT NULL COMMENT '管理员类型 (1: 超级管理员, 0: 普通管理员)',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `adminType` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_username` (`username`) -- Added unique constraint back for safety
-) ENGINE = InnoDB AUTO_INCREMENT = 7 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci COMMENT = '管理员';
--- ----------------------------
--- Records of admin (Original 3)
--- ----------------------------
+  UNIQUE KEY `uk_username` (`username`)
+) ENGINE = InnoDB AUTO_INCREMENT = 7 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
 INSERT INTO `admin` (`id`, `username`, `password`, `adminType`)
 VALUES (1, 'admin', '123456', 1);
 INSERT INTO `admin` (`id`, `username`, `password`, `adminType`)
 VALUES (2, 'yx5411', '12345', 0);
 INSERT INTO `admin` (`id`, `username`, `password`, `adminType`)
 VALUES (3, 'xy1221', '12345', 0);
--- ----------------------------
--- Records of admin (New 3)
--- ----------------------------
 INSERT INTO `admin` (`username`, `password`, `adminType`)
 VALUES ('admin_new', '654321', 0);
 INSERT INTO `admin` (`username`, `password`, `adminType`)
 VALUES ('test_admin', 'testpass', 0);
 INSERT INTO `admin` (`username`, `password`, `adminType`)
 VALUES ('librarian01', 'libpass', 0);
--- ----------------------------
--- Table structure for reader_info
--- ----------------------------
 DROP TABLE IF EXISTS `reader_info`;
 CREATE TABLE `reader_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
-  `realName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '真实姓名',
-  `sex` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '性别',
-  `birthday` date NULL DEFAULT NULL COMMENT '出生日期',
-  `address` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '籍贯',
-  `tel` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电话',
-  `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
-  `registerDate` datetime(0) NULL DEFAULT NULL COMMENT '注册日期',
-  `readerNumber` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '读者编号',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `realName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `sex` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `birthday` date NULL DEFAULT NULL,
+  `address` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tel` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `registerDate` datetime(0) NULL DEFAULT NULL,
+  `readerNumber` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_username` (`username`),
   UNIQUE KEY `uk_readerNumber` (`readerNumber`)
-) ENGINE = InnoDB AUTO_INCREMENT = 7 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci COMMENT = '读者信息';
--- ----------------------------
--- Records of reader_info (Original 3)
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 7 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
 INSERT INTO `reader_info` (
     `id`,
     `username`,
@@ -146,9 +116,6 @@ VALUES (
     '2025-04-04 13:36:42',
     'RD20250003'
   );
--- ----------------------------
--- Records of reader_info (New 3)
--- ----------------------------
 INSERT INTO `reader_info` (
     `username`,
     `password`,
@@ -221,19 +188,13 @@ VALUES (
     NOW(),
     'RD20250006'
   );
--- ----------------------------
--- Table structure for type_info
--- ----------------------------
 DROP TABLE IF EXISTS `type_info`;
 CREATE TABLE `type_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图书分类名称',
-  `remarks` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `remarks` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci COMMENT = '图书类型表';
--- ----------------------------
--- Records of type_info (Original 10)
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 21 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
 INSERT INTO `type_info` (`id`, `name`, `remarks`)
 VALUES (1, '文学类', '小说、散文、诗歌等');
 INSERT INTO `type_info` (`id`, `name`, `remarks`)
@@ -254,9 +215,6 @@ INSERT INTO `type_info` (`id`, `name`, `remarks`)
 VALUES (9, '社会学类', '社会理论、社会调查等');
 INSERT INTO `type_info` (`id`, `name`, `remarks`)
 VALUES (10, '科普类', '普及自然科学和社会科学知识');
--- ----------------------------
--- Records of type_info (New 10)
--- ----------------------------
 INSERT INTO `type_info` (`name`, `remarks`)
 VALUES ('哲学类', '中西方哲学、伦理学等');
 INSERT INTO `type_info` (`name`, `remarks`)
@@ -277,31 +235,25 @@ INSERT INTO `type_info` (`name`, `remarks`)
 VALUES ('语言学类', '语言理论、文字学等');
 INSERT INTO `type_info` (`name`, `remarks`)
 VALUES ('环境科学类', '环境保护、生态学等');
--- ----------------------------
--- Table structure for book_info
--- ----------------------------
 DROP TABLE IF EXISTS `book_info`;
 CREATE TABLE `book_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图书名称',
-  `author` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
-  `publish` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '出版社',
-  `isbn` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'ISBN编号',
-  `introduction` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '简介',
-  `language` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '语言',
-  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '价格',
-  `publish_date` date NULL DEFAULT NULL COMMENT '出版时间',
-  `type_id` int(11) NULL DEFAULT NULL COMMENT '书籍类型ID',
-  `status` int(1) NOT NULL DEFAULT 0 COMMENT '状态：0未借出，1已借出',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `author` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `publish` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `isbn` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `introduction` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `language` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `price` decimal(10, 2) NULL DEFAULT NULL,
+  `publish_date` date NULL DEFAULT NULL,
+  `type_id` int(11) NULL DEFAULT NULL,
+  `status` int(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_isbn` (`isbn`),
   KEY `fk_book_type` (`type_id`),
   CONSTRAINT `fk_book_type` FOREIGN KEY (`type_id`) REFERENCES `type_info` (`id`) ON DELETE
   SET NULL ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci COMMENT = '图书信息';
--- ----------------------------
--- Records of book_info (Original 15)
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 31 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
 INSERT INTO `book_info` (
     `id`,
     `name`,
@@ -692,9 +644,6 @@ VALUES (
     6,
     0
   );
--- ----------------------------
--- Records of book_info (New 15)
--- ----------------------------
 INSERT INTO `book_info` (
     `name`,
     `author`,
@@ -1055,29 +1004,49 @@ VALUES (
     4,
     0
   );
--- ----------------------------
--- Table structure for lend_list
--- ----------------------------
+INSERT INTO `book_info` (
+    `name`,
+    `author`,
+    `publish`,
+    `isbn`,
+    `introduction`,
+    `language`,
+    `price`,
+    `publish_date`,
+    `type_id`,
+    `status`
+  )
+VALUES (
+    30,
+    '数据库系统概念',
+    'Abraham Silberschatz',
+    '机械工业出版社',
+    '9787111678707',
+    '数据库领域的经典教材，涵盖了数据库系统的基本原理和最新进展。',
+    '中文',
+    99.00,
+    '2020-08-01',
+    7,
+    1
+  );
 DROP TABLE IF EXISTS `lend_list`;
 CREATE TABLE `lend_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `bookId` int(11) NOT NULL COMMENT '图书ID',
-  `readerId` int(11) NOT NULL COMMENT '读者ID',
-  `lendDate` datetime(0) NOT NULL COMMENT '借书时间',
-  `backDate` datetime(0) NULL DEFAULT NULL COMMENT '还书时间',
-  `backType` int(1) NULL DEFAULT NULL COMMENT '归还类型(0:正常, 1:续借后归还, 2:逾期归还, 3:异常归还)',
-  `exceptRemarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '异常备注信息',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bookId` int(11) NOT NULL,
+  `readerId` int(11) NOT NULL,
+  `lendDate` datetime(0) NOT NULL,
+  `backDate` datetime(0) NULL DEFAULT NULL,
+  `backType` int(1) NULL DEFAULT NULL,
+  `exceptRemarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `fk_lend_book` (`bookId`),
   KEY `fk_lend_reader` (`readerId`),
   CONSTRAINT `fk_lend_book` FOREIGN KEY (`bookId`) REFERENCES `book_info` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_lend_reader` FOREIGN KEY (`readerId`) REFERENCES `reader_info` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci COMMENT = '借阅记录';
--- ----------------------------
--- Records of lend_list (Original 13)
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 31 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+DELETE FROM `lend_list`;
+ALTER TABLE `lend_list` AUTO_INCREMENT = 1;
 INSERT INTO `lend_list` (
-    `id`,
     `bookId`,
     `readerId`,
     `lendDate`,
@@ -1087,15 +1056,105 @@ INSERT INTO `lend_list` (
   )
 VALUES (
     1,
-    2,
     1,
-    '2025-04-01 09:15:30',
-    '2025-04-15 16:30:00',
+    '2025-04-01 10:00:00',
+    '2025-04-15 11:00:00',
     0,
     NULL
   );
 INSERT INTO `lend_list` (
-    `id`,
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    7,
+    1,
+    '2025-04-16 09:30:00',
+    '2025-05-01 10:00:00',
+    1,
+    NULL
+  );
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (11, 1, '2025-05-02 14:00:00');
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (16, 1, '2025-05-05 16:00:00');
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    3,
+    2,
+    '2025-04-03 11:20:00',
+    '2025-04-18 15:00:00',
+    0,
+    NULL
+  );
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    8,
+    2,
+    '2025-04-20 10:15:00',
+    '2025-05-10 09:00:00',
+    2,
+    '逾期5天归还'
+  );
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (12, 2, '2025-05-11 11:00:00');
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (17, 2, '2025-05-12 13:30:00');
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    5,
+    3,
+    '2025-04-05 14:00:00',
+    '2025-04-25 16:30:00',
+    0,
+    NULL
+  );
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    9,
+    3,
+    '2025-04-26 17:00:00',
+    '2025-05-03 10:00:00',
+    3,
+    '书本封面轻微破损'
+  );
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (14, 3, '2025-05-04 09:00:00');
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (18, 3, '2025-05-06 11:45:00');
+INSERT INTO `lend_list` (
     `bookId`,
     `readerId`,
     `lendDate`,
@@ -1105,15 +1164,13 @@ INSERT INTO `lend_list` (
   )
 VALUES (
     2,
-    3,
-    2,
-    '2025-04-02 11:05:10',
-    '2025-04-20 10:00:00',
+    4,
+    '2025-04-08 15:00:00',
+    '2025-04-28 09:00:00',
     0,
     NULL
   );
 INSERT INTO `lend_list` (
-    `id`,
     `bookId`,
     `readerId`,
     `lendDate`,
@@ -1122,16 +1179,18 @@ INSERT INTO `lend_list` (
     `exceptRemarks`
   )
 VALUES (
-    3,
-    3,
-    3,
-    '2025-04-04 21:50:22',
-    '2025-04-04 21:50:32',
-    3,
-    'Book Damaged Slightly'
+    10,
+    4,
+    '2025-04-29 10:30:00',
+    '2025-05-14 11:00:00',
+    2,
+    '逾期2天'
   );
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (15, 4, '2025-05-15 10:00:00');
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (19, 4, '2025-05-16 15:20:00');
 INSERT INTO `lend_list` (
-    `id`,
     `bookId`,
     `readerId`,
     `lendDate`,
@@ -1142,141 +1201,12 @@ INSERT INTO `lend_list` (
 VALUES (
     4,
     5,
-    1,
-    '2025-04-05 21:35:35',
-    '2025-04-05 21:35:47',
-    1,
-    NULL
-  );
-INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (5, 6, 3, '2025-04-05 21:42:35', NULL, NULL, NULL);
--- Lent
-INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (6, 4, 1, '2025-04-10 10:00:00', NULL, NULL, NULL);
--- Lent
-INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (7, 7, 2, '2025-04-11 14:30:00', NULL, NULL, NULL);
--- Lent
-INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (
-    8,
-    13,
-    3,
-    '2025-04-12 09:00:00',
-    '2025-04-28 11:00:00',
+    '2025-04-10 16:00:00',
+    '2025-04-29 17:00:00',
     0,
     NULL
   );
 INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (
-    9,
-    14,
-    1,
-    '2025-04-15 16:20:00',
-    NULL,
-    NULL,
-    NULL
-  );
--- Lent
-INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (
-    10,
-    15,
-    2,
-    '2025-04-18 11:15:00',
-    NULL,
-    NULL,
-    NULL
-  );
--- Lent
-INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (
-    11,
-    1,
-    3,
-    '2025-04-20 17:00:00',
-    NULL,
-    NULL,
-    NULL
-  );
--- Lent
-INSERT INTO `lend_list` (
-    `id`,
-    `bookId`,
-    `readerId`,
-    `lendDate`,
-    `backDate`,
-    `backType`,
-    `exceptRemarks`
-  )
-VALUES (
-    12,
-    8,
-    1,
-    '2025-04-22 08:45:00',
-    NULL,
-    NULL,
-    NULL
-  );
--- Lent
-INSERT INTO `lend_list` (
-    `id`,
     `bookId`,
     `readerId`,
     `lendDate`,
@@ -1286,72 +1216,101 @@ INSERT INTO `lend_list` (
   )
 VALUES (
     13,
-    10,
-    2,
-    '2025-04-25 13:00:00',
-    NULL,
-    NULL,
+    5,
+    '2025-05-01 13:00:00',
+    '2025-05-13 14:00:00',
+    3,
+    '书籍有少量笔记痕迹'
+  );
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (20, 5, '2025-05-14 16:00:00');
+INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
+VALUES (22, 5, '2025-05-16 09:10:00');
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    6,
+    6,
+    '2025-04-12 12:00:00',
+    '2025-05-02 13:00:00',
+    0,
     NULL
   );
--- Lent
--- ----------------------------
--- Records of lend_list (New 13) - Using reader IDs 1-6 and available book IDs 1-30
--- ----------------------------
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    21,
+    6,
+    '2025-05-03 15:30:00',
+    '2025-05-17 10:30:00',
+    3,
+    '归还时淋湿'
+  );
 INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (16, 4, NOW());
--- 理想国 -> 李四 (Lent)
+VALUES (23, 6, '2025-05-18 11:20:00');
 INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (17, 5, NOW());
--- 艺术的故事 -> 王五 (Lent)
+VALUES (24, 6, '2025-05-19 14:45:00');
 INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (18, 6, NOW());
--- 黄帝内经 -> 赵六 (Lent)
+VALUES (25, 1, '2025-05-20 09:00:00');
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    26,
+    3,
+    '2025-05-10 10:00:00',
+    '2025-05-20 11:00:00',
+    0,
+    NULL
+  );
 INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (19, 1, NOW());
--- 爱的教育 -> 陈朵 (Lent)
+VALUES (27, 5, '2025-05-18 16:30:00');
 INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (20, 2, NOW());
--- 梦的解析 -> 陈恋 (Lent)
+VALUES (28, 2, '2025-05-19 10:15:00');
+INSERT INTO `lend_list` (
+    `bookId`,
+    `readerId`,
+    `lendDate`,
+    `backDate`,
+    `backType`,
+    `exceptRemarks`
+  )
+VALUES (
+    29,
+    4,
+    '2025-05-17 08:00:00',
+    '2025-05-21 09:00:00',
+    2,
+    '逾期1天'
+  );
 INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (21, 3, NOW());
--- 乔布斯传 -> 赵莲 (Lent)
-INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (22, 4, NOW());
--- 枪炮、病菌与钢铁 -> 李四 (Lent)
-INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (23, 5, NOW());
--- 孙子兵法 -> 王五 (Lent)
-INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (24, 6, NOW());
--- 现代汉语词典 -> 赵六 (Lent)
-INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (25, 1, NOW());
--- 寂静的春天 -> 陈朵 (Lent)
-INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (26, 2, NOW());
--- 三体II -> 陈恋 (Lent)
-INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (27, 3, NOW());
--- 许三观卖血记 -> 赵莲 (Lent)
-INSERT INTO `lend_list` (`bookId`, `readerId`, `lendDate`)
-VALUES (28, 4, NOW());
--- 深入理解Java虚拟机 -> 李四 (Lent)
--- Note: Books 2, 3, 5, 13 are returned. Books 9, 11, 12, 29, 30 are available (were not lent in original data)
--- ----------------------------
--- Table structure for notice
--- ----------------------------
+VALUES (30, 6, '2025-05-21 11:00:00');
 DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `topic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公告主题',
-  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '公告内容',
-  `author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发布人',
-  `createDate` datetime(0) NULL DEFAULT NULL COMMENT '公告发布时间',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `createDate` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci COMMENT = '公告';
--- ----------------------------
--- Records of notice (Original 5)
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 11 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
 INSERT INTO `notice` (`id`, `topic`, `content`, `author`, `createDate`)
 VALUES (
     1,
@@ -1392,9 +1351,6 @@ VALUES (
     'admin',
     '2025-04-27 14:00:00'
   );
--- ----------------------------
--- Records of notice (New 5)
--- ----------------------------
 INSERT INTO `notice` (`topic`, `content`, `author`, `createDate`)
 VALUES (
     '关于规范使用自习室座位的通知',
@@ -1430,22 +1386,16 @@ VALUES (
     'admin',
     '2025-05-10 08:30:00'
   );
--- ----------------------------
--- Table structure for feedback
--- ----------------------------
 DROP TABLE IF EXISTS `feedback`;
 CREATE TABLE `feedback` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `reader_id` int(11) NOT NULL COMMENT '读者ID',
-  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '反馈内容',
-  `submission_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交时间',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reader_id` int(11) NOT NULL,
+  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `submission_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_feedback_reader` (`reader_id`),
   CONSTRAINT `fk_feedback_reader` FOREIGN KEY (`reader_id`) REFERENCES `reader_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci COMMENT = '问题反馈表';
--- ----------------------------
--- Records of feedback (Original 6)
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 13 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
 INSERT INTO `feedback` (`id`, `reader_id`, `content`, `submission_time`)
 VALUES (
     1,
@@ -1488,9 +1438,6 @@ VALUES (
     '四楼自习区的空调好像不太制冷，夏天快到了，希望能检查一下。',
     '2025-04-28 14:55:00'
   );
--- ----------------------------
--- Records of feedback (New 6) - Using Reader IDs 1-6
--- ----------------------------
 INSERT INTO `feedback` (`reader_id`, `content`, `submission_time`)
 VALUES (
     4,
@@ -1507,12 +1454,8 @@ INSERT INTO `feedback` (`reader_id`, `content`, `submission_time`)
 VALUES (2, '建议增加一些考研相关的专业课书籍。', NOW());
 INSERT INTO `feedback` (`reader_id`, `content`, `submission_time`)
 VALUES (3, '借书处的自助借还机反应有点慢，可以检查下系统吗？', NOW());
--- ----------------------------
--- Final Update book_info status based on all lend_list records
--- ----------------------------
 UPDATE book_info
 SET status = 0;
--- Reset all book status first
 UPDATE book_info
 SET status = 1
 WHERE id IN (
@@ -1520,5 +1463,4 @@ WHERE id IN (
     FROM lend_list
     WHERE backDate IS NULL
   );
--- Set status for currently lent books
 SET FOREIGN_KEY_CHECKS = 1;

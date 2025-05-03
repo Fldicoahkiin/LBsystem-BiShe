@@ -124,7 +124,7 @@
         function lendBook(datas){
             //向后台发送请求
             $.ajax({
-                url: "addLend",
+                url: "${pageContext.request.contextPath}/addLend",
                 type: "POST",
                 data: datas,
                 success: function (result) {

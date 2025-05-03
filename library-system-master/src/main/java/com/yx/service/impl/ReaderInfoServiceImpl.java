@@ -70,15 +70,32 @@ public class ReaderInfoServiceImpl implements ReaderInfoService {
     }
 
     /**
-     * 生成读者卡号 (示例：年份+月份+时间戳后几位+随机数)
+     * 生成读者卡号 (格式: RD + 年份 + 4位顺序号, 例如 RD20250001)
      */
-    private String generateReaderNumber() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-        String prefix = sdf.format(new Date());
-        String timestampSuffix = String.valueOf(System.currentTimeMillis() % 10000); // 时间戳后4位
-        Random random = new Random();
-        String randomSuffix = String.format("%02d", random.nextInt(100)); // 2位随机数
-        // 组合，例如：202504 1234 56
-        return prefix + timestampSuffix + randomSuffix;
+    private synchronized String generateReaderNumber() {
+        SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
+        String currentYear = sdfYear.format(new Date());
+        String prefix = "RD" + currentYear; // 例如 "RD2025"
+
+        // 查询当年已存在的最大卡号
+        String maxNumber = readerInfoMapper.findMaxReaderNumberByYearPrefix(prefix);
+
+        int nextSequence = 1;
+        if (maxNumber != null && maxNumber.startsWith(prefix) && maxNumber.length() == prefix.length() + 4) {
+            try {
+                // 提取序号部分并加1
+                String sequenceStr = maxNumber.substring(prefix.length());
+                nextSequence = Integer.parseInt(sequenceStr) + 1;
+            } catch (NumberFormatException e) {
+                // 如果最大卡号格式不正确（理论上不应发生），则从1开始
+                System.err.println("警告: 数据库中读者卡号格式错误: " + maxNumber + "，将从 1 开始生成。");
+                nextSequence = 1;
+            }
+        }
+
+        // 格式化为4位序号，不足补零
+        String newSequenceStr = String.format("%04d", nextSequence);
+
+        return prefix + newSequenceStr; // 例如 "RD20250001"
     }
 }

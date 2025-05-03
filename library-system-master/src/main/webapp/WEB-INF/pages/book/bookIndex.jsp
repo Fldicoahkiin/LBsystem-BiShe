@@ -93,17 +93,23 @@
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
                 //{field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'isbn', width: 150, title: 'ISBN'},
                 {field: 'name', width: 150, title: '图书名称'},
                 {field: 'author', width: 120, title: '作者'},
                 {field: 'publish', width: 150, title: '出版社'},
-                {templet:'<div>{{d.typeInfo.name}}</div>',width:100,title:'图书类型'},
+                {field: 'isbn', width: 150, title: 'ISBN'},
                 {field: 'price', width: 80, title: '价格', sort: true},
                 {field: 'language', width: 80, title: '语言'},
-                {field: 'publishDate', width: 120, title: '出版日期', sort: true},
+                {field: 'typeInfo.name', width: 100, title: '类型',
+                    templet: function(d){
+                        return d.typeInfo ? d.typeInfo.name : '未知';
+                    }
+                },
+                {field: 'publishDate', width: 120, title: '出版日期', sort: true,
+                    templet: "<div>{{layui.util.toDateString(d.publishDate, 'yyyy-MM-dd')}}</div>"
+                },
                 {field: 'introduction', title: '简介', minWidth: 200},
                 {field: 'status', width: 100, title: '状态', templet: function(d){
-                    return d.status == 0 ? '<span class=\"layui-badge layui-bg-green\">未借出</span>' : '<span class=\"layui-badge layui-bg-red\">已借出</span>';
+                    return d.status == 0 ? '<span class="layui-badge layui-bg-green">未借出</span>' : '<span class="layui-badge layui-bg-red">已借出</span>';
                 }},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center", fixed: "right"}
             ]],

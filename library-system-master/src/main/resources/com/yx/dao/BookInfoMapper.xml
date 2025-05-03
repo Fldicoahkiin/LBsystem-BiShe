@@ -233,6 +233,22 @@
     order by b.id desc
   </select>
 
+  <!-- 根据 ID 列表批量查询图书信息 (包含类型名称) -->
+  <select id="queryBookInfoByIds" resultMap="queryBookAllMap">
+    SELECT
+      b.*,
+      t.name as type_name
+    FROM
+      book_info b
+    LEFT JOIN
+      type_info t on t.id = b.type_id
+    WHERE b.id IN
+    <foreach item="item" index="index" collection="ids"
+             open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </select>
+
   <!--根据图书类型获取图书对应数量信息-->
   <select id="getBookCountByType" resultType="com.yx.po.BookInfo">
     SELECT

@@ -72,7 +72,7 @@ public class LendListController {
      */
     @GetMapping("/addLendList")
     public String addLendList() {
-        return "addLendList";
+        return "lend/addLendList";
     }
 
     /**
@@ -105,9 +105,17 @@ public class LendListController {
                 lendListService.addLendListSubmit(lendList);
                 // 更变书的状态
                 BookInfo info = bookInfoService.queryBookInfoById(Integer.valueOf(bid));
-                // 设置书的状态
-                info.setStatus(1);
-                bookInfoService.updateBookSubmit(info);
+                // 添加空指针检查
+                if (info != null) {
+                    // 设置书的状态
+                    info.setStatus(1);
+                    bookInfoService.updateBookSubmit(info);
+                } else {
+                    // 处理未找到图书的情况，可以记录日志或抛出异常让事务回滚
+                    System.err.println("尝试借阅不存在的图书ID: " + bid);
+                    // 可以根据业务需求决定是否抛出异常中断整个借阅过程
+                    // throw new RuntimeException("尝试借阅不存在的图书ID: " + bid);
+                }
             }
 
         }
@@ -238,19 +246,44 @@ public class LendListController {
             model.addAttribute("errorMessage", "请先以读者身份登录。");
             // 或者 return "redirect:/login"; // 重定向到登录页
             // 这里暂时只在模型中添加一个空列表，避免JSP报错
-            model.addAttribute("info", new java.util.ArrayList<LendList>());
+            model.addAttribute("historyList", new java.util.ArrayList<LendList>());
+            model.addAttribute("readerName", "未登录");
+            model.addAttribute("readerId", 0);
         } else {
             ReaderInfo reader = (ReaderInfo) userObject;
             Integer readerId = reader.getId();
 
-            // 2. 查询该读者的借阅信息
-            List<LendList> lendList = lendListService.queryLookBookList(readerId, null);
+            // 2. 查询该读者的借阅信息 (使用 queryLookBookList 获取完整信息)
+            List<LendList> historyList = lendListService.queryLookBookList(readerId, null);
+            String readerName = reader.getRealName();
 
-            // 3. 将查询结果添加到 Model
-            model.addAttribute("info", lendList);
+            // 3. 将查询结果添加到 Model (使用 historyList, readerName, readerId)
+            model.addAttribute("historyList", historyList);
+            model.addAttribute("readerName", readerName);
+            model.addAttribute("readerId", readerId);
         }
 
         return "lend/lookBookList";
+    }
+
+    /**
+     * 跳转到读者借阅历史页面 (管理员界面点击读者姓名时调用)
+     */
+    @GetMapping("/lendHistoryByReader")
+    public String lendHistoryByReader(@RequestParam("readerId") Integer readerId, Model model) {
+        // 查询该读者的所有借阅记录 (不分页，因为可能需要在JSP中展示完整列表)
+        // 注意：queryLookBookList 返回的是包含详细信息的 LendList
+        List<LendList> historyList = lendListService.queryLookBookList(readerId, null);
+
+        // 查询读者信息用于显示标题或额外信息 (可选)
+        ReaderInfo readerInfo = readerService.queryReaderInfoById(readerId);
+        String readerName = (readerInfo != null) ? readerInfo.getRealName() : "未知读者";
+
+        model.addAttribute("historyList", historyList);
+        model.addAttribute("readerName", readerName);
+        model.addAttribute("readerId", readerId);
+
+        return "lend/readerLendHistory"; // 指向 /WEB-INF/pages/lend/readerLendHistory.jsp
     }
 
 }

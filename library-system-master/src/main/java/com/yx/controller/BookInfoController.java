@@ -56,7 +56,7 @@ public class BookInfoController {
      */
     @GetMapping("/bookAdd")
     public String bookAdd() {
-        return "bookAdd";
+        return "book/bookAdd";
     }
 
     /**
@@ -76,7 +76,7 @@ public class BookInfoController {
     public String queryTypeInfoById(Integer id, Model model) {
         BookInfo bookInfo = bookInfoService.queryBookInfoById(id);
         model.addAttribute("info", bookInfo);
-        return "updateBook";
+        return "book/updateBook";
     }
 
     /**
@@ -123,5 +123,21 @@ public class BookInfoController {
         String typeListJson = JSON.toJSONString(typeList);
         model.addAttribute("typeListJson", typeListJson);
         return "book/readerBookIndex";
+    }
+
+    /**
+     * 跳转到图书详情页面
+     */
+    @GetMapping("/bookDetail")
+    public String bookDetail(@RequestParam("id") Integer id, Model model) {
+        BookInfo bookInfo = bookInfoService.queryBookInfoById(id);
+        if (bookInfo == null) {
+            // 可以添加错误处理，例如重定向或显示错误消息
+            model.addAttribute("errorMessage", "未找到ID为 " + id + " 的图书。");
+            // 返回一个通用的错误页面或列表页
+            return "error/generalError"; // 假设有一个通用错误页面
+        }
+        model.addAttribute("bookInfo", bookInfo);
+        return "book/bookDetail"; // 指向 /WEB-INF/pages/book/bookDetail.jsp
     }
 }

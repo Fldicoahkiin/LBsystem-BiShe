@@ -235,4 +235,24 @@
     from reader_info
     where username = #{username,jdbcType=VARCHAR}
   </select>
+
+  <!-- 根据年份前缀查询最大读者卡号 -->
+  <select id="findMaxReaderNumberByYearPrefix" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT MAX(readerNumber)
+    FROM reader_info
+    WHERE readerNumber LIKE CONCAT(#{prefix}, '%')
+  </select>
+
+  <!-- 根据 ID 列表批量查询读者信息 -->
+  <select id="queryReaderInfoByIds" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM reader_info
+    WHERE id IN
+    <foreach item="item" index="index" collection="ids"
+             open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </select>
+
 </mapper>

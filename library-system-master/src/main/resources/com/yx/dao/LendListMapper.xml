@@ -163,6 +163,11 @@
       <result property="name" column="bookName"/>
       <result property="author" column="bookAuthor"/>
       <result property="isbn" column="bookIsbn"/>
+      <result property="typeId" column="typeId"/>
+      <association property="typeInfo" javaType="com.yx.po.TypeInfo">
+          <id property="id" column="typeId"/>
+          <result property="name" column="typeName"/>
+      </association>
     </association>
 
     <!--读者信息，需要得到读者卡号和真实姓名-->
@@ -175,18 +180,26 @@
 
   <!--查询所有记录-->
   <select id="queryLendListAll" parameterType="com.yx.po.LendList" resultMap="queryLendListAllMap">
-    SELECT lend.*,
-    book.name as bookName,
-    reader.realName as realName,
-    reader.readerNumber
-    from lend_list lend LEFT JOIN book_info book  on book.id=lend.bookId
-    LEFT JOIN reader_info reader on reader.id=lend.readerId
+    SELECT 
+      lend.*,
+      book.name as bookName,
+      book.author as bookAuthor,
+      book.isbn as bookIsbn,
+      book.type_id as typeId,  -- Select book's type_id
+      type.name as typeName,   -- Select type's name
+      reader.realName as realName,
+      reader.readerNumber
+    FROM lend_list lend 
+    LEFT JOIN book_info book ON book.id = lend.bookId
+    LEFT JOIN reader_info reader ON reader.id = lend.readerId
+    LEFT JOIN type_info type ON book.type_id = type.id -- Join with type_info
     <!--带条件的高级查询-->
     <where>
         <if test="bookInfo!=null">
           <!--根据图书名称查询-->
           <if test="bookInfo.name!=null and bookInfo.name!=''">
-            and book.name like '%${bookInfo.name}%'
+            <!-- 使用 CONCAT 进行模糊查询，并使用 #{...} 防止 SQL 注入 -->
+            and book.name like CONCAT('%', #{bookInfo.name}, '%')
           </if>
           <!--还需判断返还时间是否为空
           如果书已经被借走，状态为1，还没有还，则返回时间=null
@@ -202,10 +215,42 @@
         <!--根据借阅卡查询-->
         <if test="readerInfo!=null">
           <if test="readerInfo.readerNumber!=null and readerInfo.readerNumber!=''">
-            and readerNumber like '%${readerInfo.readerNumber}%'
+            <!-- 使用 CONCAT 进行模糊查询，并使用 #{...} 防止 SQL 注入 -->
+            and reader.readerNumber like CONCAT('%', #{readerInfo.readerNumber}, '%')
           </if>
         </if>
         <!--根据归还类型查询-->
+        <if test="backType!=null">
+          and backType=#{backType}
+        </if>
+    </where>
+    order by lend.lendDate desc
+  </select>
+
+  <!-- 查询基础借阅列表 (不包含关联对象映射) -->
+  <select id="queryLendListAllBase" parameterType="com.yx.po.LendList" resultMap="BaseResultMap">
+    SELECT
+      lend.*
+    FROM lend_list lend
+    LEFT JOIN book_info book ON book.id = lend.bookId
+    LEFT JOIN reader_info reader ON reader.id = lend.readerId
+    <where>
+        <if test="bookInfo!=null">
+          <if test="bookInfo.name!=null and bookInfo.name!=''">
+            and book.name like CONCAT('%', #{bookInfo.name}, '%')
+          </if>
+          <if test="bookInfo.status!=null and bookInfo.status==1">
+            and book.status=1 and backDate is null
+          </if>
+          <if test="bookInfo.status!=null and bookInfo.status==0">
+            and book.status=0 and backDate is not null
+          </if>
+        </if>
+        <if test="readerInfo!=null">
+          <if test="readerInfo.readerNumber!=null and readerInfo.readerNumber!=''">
+            and reader.readerNumber like CONCAT('%', #{readerInfo.readerNumber}, '%')
+          </if>
+        </if>
         <if test="backType!=null">
           and backType=#{backType}
         </if>
@@ -229,24 +274,24 @@
   </update>
 
   <!--查询时间线-->
-  <select id="queryLookBookList" resultMap="queryLendListAllMap">
+  <select id="queryLookBookList" resultType="com.yx.po.LendList">
     SELECT
-    lend.*,
-    reader.readerNumber,
-    reader.realName AS realName,  -- Alias for reader name
-    bookInfo.name  AS  bookName,   -- Alias for book name
-    bookInfo.author AS bookAuthor, -- Add alias for book author
-    bookInfo.isbn AS bookIsbn     -- Add alias for book isbn
+      lend.id as id, lend.bookId, lend.readerId, lend.lendDate, lend.backDate, lend.backType, lend.exceptRemarks,
+      reader.readerNumber as `readerInfo.readerNumber`,
+      reader.realName AS `readerInfo.realName`,
+      book.name  AS  `bookInfo.name`,
+      book.author AS `bookInfo.author`,
+      book.isbn AS `bookInfo.isbn`,
+      book.type_id AS `bookInfo.typeId`,
+      type.name AS `bookInfo.typeInfo.name`
     FROM
-    lend_list lend
+      lend_list lend
     LEFT JOIN reader_info reader ON reader.id = lend.readerId
-    LEFT JOIN book_info bookInfo ON bookInfo.id = lend.bookId
+    LEFT JOIN book_info book ON book.id = lend.bookId
+    LEFT JOIN type_info type ON book.type_id = type.id
     <where>
-
-    <if test="bid!=null">and bookInfo.id=#{bid} </if>
-
-    <if test="rid!=null">and reader.id=#{rid} </if>
-
+      <if test="bid!=null">and book.id=#{bid} </if>
+      <if test="rid!=null">and reader.id=#{rid} </if>
     </where>
     order by lend.id desc
   </select>

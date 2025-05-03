@@ -4,15 +4,24 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yx.dao.BookInfoMapper;
 import com.yx.dao.LendListMapper;
+import com.yx.dao.ReaderInfoMapper;
+import com.yx.dao.TypeInfoMapper;
 import com.yx.po.BookInfo;
 import com.yx.po.LendList;
+import com.yx.po.ReaderInfo;
+import com.yx.po.TypeInfo;
+import com.yx.service.BookInfoService;
 import com.yx.service.LendListService;
+import com.yx.service.ReaderInfoService;
+import com.yx.service.TypeInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service("lendListService")
 public class LendListServiceImpl implements LendListService {
@@ -21,11 +30,54 @@ public class LendListServiceImpl implements LendListService {
     private LendListMapper lendListMapper;
     @Autowired
     private BookInfoMapper bookInfoMapper;
+    @Autowired
+    private ReaderInfoMapper readerInfoMapper;
+    @Autowired
+    private TypeInfoMapper typeInfoMapper;
 
     @Override
     public PageInfo<LendList> queryLendListAll(LendList lendList, int page, int limit) {
         PageHelper.startPage(page, limit);
-        List<LendList> list = lendListMapper.queryLendListAll(lendList);
+        // 1. 查询基础 LendList (不依赖 association 映射)
+        List<LendList> list = lendListMapper.queryLendListAllBase(lendList); // Assume a new base query method
+
+        if (list != null && !list.isEmpty()) {
+            // 2. 提取所有需要的 bookId 和 readerId
+            List<Integer> bookIds = list.stream().map(LendList::getBookId).distinct().collect(Collectors.toList());
+            List<Integer> readerIds = list.stream().map(LendList::getReaderId).distinct().collect(Collectors.toList());
+
+            // 3. 批量查询关联的 BookInfo 和 ReaderInfo
+            Map<Integer, BookInfo> bookInfoMap = bookInfoMapper.queryBookInfoByIds(bookIds)
+                    .stream().collect(Collectors.toMap(BookInfo::getId, b -> b));
+            Map<Integer, ReaderInfo> readerInfoMap = readerInfoMapper.queryReaderInfoByIds(readerIds)
+                    .stream().collect(Collectors.toMap(ReaderInfo::getId, r -> r));
+
+            // 4. (可选) 批量查询 BookInfo 关联的 TypeInfo (如果 BookInfo 本身没有包含 TypeInfo)
+            List<Integer> typeIds = bookInfoMap.values().stream()
+                    .map(BookInfo::getTypeId)
+                    .filter(tid -> tid != null)
+                    .distinct()
+                    .collect(Collectors.toList());
+            Map<Integer, TypeInfo> typeInfoMap = typeInfoMapper.queryTypeInfoByIds(typeIds)
+                    .stream().collect(Collectors.toMap(TypeInfo::getId, t -> t));
+
+            // 5. 遍历 LendList，手动设置关联对象
+            for (LendList item : list) {
+                BookInfo book = bookInfoMap.get(item.getBookId());
+                if (book != null) {
+                    // 设置 BookInfo 的 TypeInfo
+                    if (book.getTypeId() != null) {
+                        book.setTypeInfo(typeInfoMap.get(book.getTypeId()));
+                    }
+                    item.setBookInfo(book);
+                } else {
+                    item.setBookInfo(new BookInfo()); // Fallback
+                }
+
+                ReaderInfo reader = readerInfoMap.get(item.getReaderId());
+                item.setReaderInfo(reader != null ? reader : new ReaderInfo()); // Fallback
+            }
+        }
 
         PageInfo pageInfo = new PageInfo(list);
         return pageInfo;

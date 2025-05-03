@@ -4,6 +4,7 @@ import com.yx.po.BookInfo;
 
 import java.awt.print.Book;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BookInfoMapper {
     /**
@@ -63,4 +64,9 @@ public interface BookInfoMapper {
      * 根据类型获取图书数量
      */
     List<BookInfo> getBookCountByType();
+
+    /**
+     * 根据 ID 列表批量查询图书信息
+     */
+    List<BookInfo> queryBookInfoByIds(@Param("ids") List<Integer> ids);
 }

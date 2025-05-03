@@ -31,5 +31,10 @@ public interface TypeInfoMapper {
      */
     void deleteTypeByIds(List<Integer> id);
 
-    //List<TypeInfo> queryTypeName();
+    // List<TypeInfo> queryTypeName();
+
+    /**
+     * 根据 ID 列表批量查询类型信息
+     */
+    List<TypeInfo> queryTypeInfoByIds(@Param("ids") List<Integer> ids);
 }

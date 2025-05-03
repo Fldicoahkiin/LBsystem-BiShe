@@ -174,20 +174,48 @@
                     deleteInfoByIds(data.id,data.bookId,index);
                     layer.close(index);
                 });
-            }else if( obj.event === 'bookInfoEvent') {//书的借阅线
-                  //获取书的id
-                  var bid=data.bookId;
-                  queryLookBookList("book",bid);
-            }else{//读者借阅线
-                //获取读者的id
-                var rid=data.readerId;
-                queryLookBookList("user",rid);
+            }else if( obj.event === 'bookInfoEvent') {// 修改：跳转到图书详情
+                  var bookId = data.bookId;
+                  var bookName = data.bookInfo ? data.bookInfo.name : '未知图书'; // 获取图书名称用于标题
+                  if(!bookId) {
+                      layer.msg('无法获取图书ID');
+                      return;
+                  }
+                  var detailIndex = layer.open({
+                      title: '图书详情 - ' + bookName,
+                      type: 2,
+                      shade: 0.2,
+                      maxmin:true,
+                      shadeClose: true,
+                      area: ['80%', '80%'],
+                      content: '${pageContext.request.contextPath}/bookDetail?id='+bookId,
+                  });
+                  $(window).on("resize", function () { layer.full(detailIndex); });
+
+            }else if( obj.event === 'readerInfoEvent'){ // 修改：跳转到读者借阅历史
+                var readerId = data.readerId;
+                var readerName = data.readerInfo ? data.readerInfo.realName : '未知读者'; // 获取读者姓名用于标题
+                if(!readerId) {
+                    layer.msg('无法获取读者ID');
+                    return;
+                }
+                var historyIndex = layer.open({
+                      title: '借阅历史 - ' + readerName,
+                      type: 2,
+                      shade: 0.2,
+                      maxmin:true,
+                      shadeClose: true,
+                      area: ['80%', '80%'],
+                      content: '${pageContext.request.contextPath}/lendHistoryByReader?readerId='+readerId,
+                 });
+                 $(window).on("resize", function () { layer.full(historyIndex); });
             }
         });
 
         /**
-         * 借阅线打开内容
+         * 借阅线打开内容 (此函数不再被 bookInfoEvent 和 readerInfoEvent 调用, 可考虑删除或保留用于其他目的)
          */
+        /*
         function queryLookBookList(flag,id){
             var index = layer.open({
                 title: '借阅时间线',
@@ -202,6 +230,7 @@
                 layer.full(index);
             });
         }
+        */
 
 
 

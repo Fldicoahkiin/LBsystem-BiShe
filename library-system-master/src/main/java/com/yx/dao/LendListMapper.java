@@ -66,6 +66,11 @@ public interface LendListMapper {
     List<LendList> queryLookBookList(@Param("rid") Integer rid, @Param("bid") Integer bid);
 
     /**
+     * 查询基础借阅列表 (不包含关联对象映射)
+     */
+    List<LendList> queryLendListAllBase(LendList lendList);
+
+    /**
      * 还书操作(正常还)
      */
     void updateLendListSubmit(LendList lendList);

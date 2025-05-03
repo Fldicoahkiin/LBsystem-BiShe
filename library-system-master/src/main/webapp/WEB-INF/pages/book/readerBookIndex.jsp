@@ -95,10 +95,10 @@
                 {field: 'isbn', width: 150, title: 'ISBN'},
                 {field: 'price', width: 80, title: '价格', sort: true},
                 {field: 'language', width: 80, title: '语言'},
-                {field: 'typeId', width: 100, title: '类型',
+                {field: 'typeInfo.name', width: 100, title: '类型',
                    templet:function(d){
-                        // 使用 typeMap 将 typeId 转换为 typeName
-                       return typeMap[d.typeId] || d.typeId; // 如果找不到映射，则显示原始ID
+                       // 检查 typeInfo 是否存在，以防万一
+                       return d.typeInfo ? d.typeInfo.name : '未知';
                    }
                 },
                 {field: 'publishDate', width: 120, title: '出版日期', sort: true},
