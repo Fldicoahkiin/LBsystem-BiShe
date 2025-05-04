@@ -55,7 +55,7 @@
         //方法级渲染
         table.render({
             elem: '#currentTableId'
-            ,url: '${pageContext.request.contextPath}/bookAll'
+            ,url: '${pageContext.request.contextPath}/queryBookInfoAll'
             ,cols: [[
                 {type: "checkbox", width: 50},
                 //{field: 'id', width: 100, title: 'ID', sort: true},
@@ -69,7 +69,7 @@
             ]]
             ,id: 'testReload'
             ,height: 310,
-             page:false
+             page:true
         });
         var $ = layui.$, active = {
             reload: function(){

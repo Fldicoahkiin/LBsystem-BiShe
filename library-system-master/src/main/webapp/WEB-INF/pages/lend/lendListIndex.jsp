@@ -109,20 +109,22 @@
                                     { field: 'backDate', width: 160, title: '还书时间' },
                                     {
                                         title: "还书类型", minWidth: 120, templet: function (res) {
-                                            if (res.backType == '0') {
-                                                return '<span class="layui-badge layui-bg-green">正常还书</span>'
+                                            if (res.backDate == null){
+                                                return '<span class="layui-badge layui-bg-red">在借中</span>';
+                                            } else if (res.backType == '0') {
+                                                return '<span class="layui-badge layui-bg-green">正常还书</span>';
                                             } else if (res.backType == '1') {
-                                                return '<span class="layui-badge layui-bg-gray">延迟还书</span>'
-
+                                                return '<span class="layui-badge layui-bg-gray">延迟还书</span>';
                                             } else if (res.backType == '2') {
-                                                return '<span class="layui-badge layui-bg-yellow">破损还书</span>'
+                                                return '<span class="layui-badge layui-bg-orange">破损还书</span>';
                                             } else if (res.backType == '3') {
-                                                return '<span class="layui-badge layui-bg-green">丢失图书</span>'
+                                                return '<span class="layui-badge layui-bg-orange">丢失图书</span>';
                                             } else {
-                                                return '<span class="layui-badge layui-bg-red">在借中</span>'
+                                                return '<span class="layui-badge">未知</span>';
                                             }
                                         }
                                     },
+                                    { field: 'exceptRemarks', width: 150, title: '异常备注' },
                                     { title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center" }
                                 ]],
                                 limits: [10, 15, 20, 25, 50, 100],

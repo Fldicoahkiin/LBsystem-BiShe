@@ -74,6 +74,8 @@ public class BookInfo implements Serializable {
      *
      * @mbggenerated Tue Mar 30 16:30:04 CST 2021
      */
+    @com.alibaba.fastjson.annotation.JSONField(format = "yyyy-MM-dd") // 添加日期格式化注解
+    @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") // 如果需要接收此格式，也加上
     private Date publishDate;
 
     /**
@@ -98,7 +100,7 @@ public class BookInfo implements Serializable {
      *
      * @mbggenerated Tue Mar 30 16:30:04 CST 2021
      */
-    private TypeInfo typeInfo;//图书类型，在图书馆里中显示什么类型的书
+    private TypeInfo typeInfo;// 图书类型，在图书馆里中显示什么类型的书
 
     private Integer counts;
 

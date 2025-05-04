@@ -14,12 +14,27 @@
     id, name, remarks
   </sql>
 
-  <!--查询全部类型信息-->
-  <select id="queryTypeInfoAll" resultType="com.yx.po.TypeInfo">
-    select * from type_info
+  <!--查询所有数据，支持条件查询-->
+  <select id="queryTypeInfoAll" resultType="com.yx.po.TypeInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from type_info
     <where>
-      <if test="name!=null">
-        and name like '%${name}%'
+      <if test="name!=null and name!=''">
+        and name like concat('%',#{name},'%')
+      </if>
+    </where>
+    order by id asc
+    LIMIT #{offset}, #{limit} <!-- 添加 LIMIT 子句 -->
+  </select>
+
+  <!-- 新增：查询总记录数 -->
+  <select id="countTypeInfoAll" resultType="int" >
+    select count(*)
+    from type_info
+    <where>
+      <if test="name!=null and name!=''">
+        and name like concat('%',#{name},'%')
       </if>
     </where>
   </select>

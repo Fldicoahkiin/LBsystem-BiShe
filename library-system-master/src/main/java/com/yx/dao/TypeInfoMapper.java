@@ -9,7 +9,7 @@ public interface TypeInfoMapper {
     /**
      * 查询所有的记录信息
      */
-    List<TypeInfo> queryTypeInfoAll(@Param(value = "name") String name);
+    List<TypeInfo> queryTypeInfoAll(@Param("name") String name, @Param("offset") Integer offset, @Param("limit") Integer limit);
 
     /**
      * 添加图书类型
@@ -37,4 +37,9 @@ public interface TypeInfoMapper {
      * 根据 ID 列表批量查询类型信息
      */
     List<TypeInfo> queryTypeInfoByIds(@Param("ids") List<Integer> ids);
+
+    /**
+     * 新增：查询总记录数
+     */
+    int countTypeInfoAll(@Param("name") String name);
 }

@@ -1,6 +1,5 @@
 package com.yx.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yx.dao.ReaderInfoMapper;
 import com.yx.po.ReaderInfo;
@@ -21,9 +20,23 @@ public class ReaderInfoServiceImpl implements ReaderInfoService {
 
     @Override
     public PageInfo<ReaderInfo> queryAllReaderInfo(ReaderInfo readerInfo, Integer pageNum, Integer limit) {
-        PageHelper.startPage(pageNum, limit);
-        List<ReaderInfo> readerInfoList = readerInfoMapper.queryAllReaderInfo(readerInfo);
-        return new PageInfo<>(readerInfoList);
+        // 手动分页实现
+        int offset = (pageNum - 1) * limit;
+        List<ReaderInfo> list = readerInfoMapper.queryAllReaderInfo(readerInfo, offset, limit);
+        int totalCount = readerInfoMapper.countAllReaderInfo(readerInfo);
+
+        PageInfo<ReaderInfo> pageInfo = new PageInfo<>();
+        pageInfo.setList(list);
+        pageInfo.setTotal(totalCount);
+        pageInfo.setPageNum(pageNum);
+        pageInfo.setPageSize(limit);
+        pageInfo.setPages((totalCount + limit - 1) / limit);
+        pageInfo.setHasPreviousPage(pageNum > 1);
+        pageInfo.setHasNextPage(pageNum < pageInfo.getPages());
+        pageInfo.setIsFirstPage(pageNum == 1);
+        pageInfo.setIsLastPage(pageNum == pageInfo.getPages());
+
+        return pageInfo;
     }
 
     @Override

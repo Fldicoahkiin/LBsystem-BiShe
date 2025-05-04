@@ -55,8 +55,12 @@ public interface NoticeMapper {
     int updateByPrimaryKey(Notice record);
 
     /**
-     * 查询所有公告信息
+     * 查询所有公告信息 (支持按标题模糊查询和分页)
      */
-    List<Notice> queryNoticeAll(Notice notice);
+    List<Notice> queryNoticeAll(@Param("topic") String topic, @Param("offset") Integer offset,
+            @Param("limit") Integer limit);
+
+    // 查询总记录数 (支持按标题模糊查询)
+    int countNoticeAll(@Param("topic") String topic);
 
 }

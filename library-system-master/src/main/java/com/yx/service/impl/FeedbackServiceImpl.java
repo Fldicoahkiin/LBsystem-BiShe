@@ -23,10 +23,23 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public PageInfo<Feedback> queryFeedbackList(Feedback feedback, int page, int limit) {
-        PageHelper.startPage(page, limit);
-        List<Feedback> list = feedbackMapper.queryFeedbackList(feedback);
-        return new PageInfo<>(list);
+    public PageInfo<Feedback> queryFeedbackList(Feedback feedback, int pageNum, int limit) {
+        int offset = (pageNum - 1) * limit;
+        List<Feedback> list = feedbackMapper.queryFeedbackList(feedback, offset, limit);
+        int totalCount = feedbackMapper.queryFeedbackCount(feedback);
+
+        PageInfo<Feedback> pageInfo = new PageInfo<>();
+        pageInfo.setList(list);
+        pageInfo.setTotal(totalCount);
+        pageInfo.setPageNum(pageNum);
+        pageInfo.setPageSize(limit);
+        pageInfo.setPages((totalCount + limit - 1) / limit);
+        pageInfo.setHasPreviousPage(pageNum > 1);
+        pageInfo.setHasNextPage(pageNum < pageInfo.getPages());
+        pageInfo.setIsFirstPage(pageNum == 1);
+        pageInfo.setIsLastPage(pageNum == pageInfo.getPages());
+
+        return pageInfo;
     }
 
     @Override

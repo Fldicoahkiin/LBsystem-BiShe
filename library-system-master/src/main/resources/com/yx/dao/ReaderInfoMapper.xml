@@ -203,24 +203,47 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="queryAllReaderInfo" resultType="com.yx.po.ReaderInfo" parameterType="com.yx.po.ReaderInfo">
-        select * from reader_info
+  <select id="queryAllReaderInfo" resultMap="BaseResultMap" >
+        select <include refid="Base_Column_List" />
+        from reader_info
         <where>
           <!--读者图书卡号-->
-          <if test="readerNumber!=null">
-            and readerNumber like '%${readerNumber}%'
+          <if test="readerInfo != null and readerInfo.readerNumber != null and readerInfo.readerNumber != ''">
+            and readerNumber like concat('%', #{readerInfo.readerNumber}, '%')
           </if>
           <!--用户名-->
-          <if test="username!=null">
-            and username like '%${username}%'
+          <if test="readerInfo != null and readerInfo.username != null and readerInfo.username != ''">
+            and username like concat('%', #{readerInfo.username}, '%')
           </if>
           <!--电话号-->
-          <if test="tel!=null">
-            and tel like '%${tel}%'
+          <if test="readerInfo != null and readerInfo.tel != null and readerInfo.tel != ''">
+            and tel like concat('%', #{readerInfo.tel}, '%')
           </if>
         </where>
-
+        order by id asc
+        LIMIT #{offset}, #{limit} <!-- 添加 LIMIT 子句 -->
   </select>
+
+  <!-- 新增：查询总记录数 -->
+  <select id="countAllReaderInfo" resultType="int">
+    select count(*)
+    from reader_info
+    <where>
+        <!--读者图书卡号-->
+        <if test="readerInfo != null and readerInfo.readerNumber != null and readerInfo.readerNumber != ''">
+          and readerNumber like concat('%', #{readerInfo.readerNumber}, '%')
+        </if>
+        <!--用户名-->
+        <if test="readerInfo != null and readerInfo.username != null and readerInfo.username != ''">
+          and username like concat('%', #{readerInfo.username}, '%')
+        </if>
+        <!--电话号-->
+        <if test="readerInfo != null and readerInfo.tel != null and readerInfo.tel != ''">
+          and tel like concat('%', #{readerInfo.tel}, '%')
+        </if>
+    </where>
+  </select>
+
   <select id="queryUserInfoByNameAndPassword" resultMap="BaseResultMap" parameterType="map" >
     select
     <include refid="Base_Column_List" />

@@ -22,33 +22,33 @@
         values (#{readerId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
     </insert>
 
-    <select id="queryFeedbackList" resultMap="BaseResultMap" parameterType="com.yx.po.Feedback">
+    <select id="queryFeedbackList" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         ,r.realName
         from feedback f
         join reader_info r on f.reader_id = r.id
         <where>
-            <if test="content != null and content != ''">
-                and f.content like concat('%', #{content}, '%')
+            <if test="feedback != null and feedback.content != null and feedback.content != ''">
+                and f.content like concat('%', #{feedback.content}, '%')
             </if>
-            <if test="readerName != null and readerName != ''">
-                 and r.realName like concat('%', #{readerName}, '%')
+            <if test="feedback != null and feedback.readerName != null and feedback.readerName != ''">
+                 and r.realName like concat('%', #{feedback.readerName}, '%')
             </if>
         </where>
         order by f.submission_time desc
     </select>
 
-     <select id="queryFeedbackCount" resultType="java.lang.Integer" parameterType="com.yx.po.Feedback">
+     <select id="queryFeedbackCount" resultType="java.lang.Integer">
         select count(1)
         from feedback f
         join reader_info r on f.reader_id = r.id
          <where>
-            <if test="content != null and content != ''">
-                and f.content like concat('%', #{content}, '%')
+            <if test="feedback != null and feedback.content != null and feedback.content != ''">
+                and f.content like concat('%', #{feedback.content}, '%')
             </if>
-            <if test="readerName != null and readerName != ''">
-                 and r.realName like concat('%', #{readerName}, '%')
+            <if test="feedback != null and feedback.readerName != null and feedback.readerName != ''">
+                 and r.realName like concat('%', #{feedback.readerName}, '%')
             </if>
         </where>
     </select>

@@ -79,10 +79,10 @@
                                                                 <span class="layui-badge layui-bg-gray">延迟还书</span>
                                                             </c:when>
                                                             <c:when test="${item.backType == 2}">
-                                                                <span class="layui-badge layui-bg-orange">逾期还书</span>
+                                                                <span class="layui-badge layui-bg-orange">破损还书</span>
                                                             </c:when>
                                                             <c:when test="${item.backType == 3}">
-                                                                <span class="layui-badge layui-bg-orange">异常还书</span>
+                                                                <span class="layui-badge layui-bg-orange">丢失图书</span>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <span class="layui-badge">未知</span>

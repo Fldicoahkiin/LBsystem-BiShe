@@ -17,11 +17,31 @@ public class TypeInfoServiceImpl implements TypeInfoService {
 
     @Autowired
     private TypeInfoMapper typeInfoMapper;
+
     @Override
-    public PageInfo<TypeInfo> queryTypeInfoAll(String name,Integer pageNum,Integer limit) {
-        PageHelper.startPage(pageNum,limit);
-        List<TypeInfo> typeInfoList =  typeInfoMapper.queryTypeInfoAll(name);
-        return new PageInfo<>(typeInfoList);
+    public PageInfo<TypeInfo> queryTypeInfoAll(String name, Integer pageNum, Integer limit) {
+        // PageHelper.startPage(pageNum,limit);
+        // List<TypeInfo> list = typeInfoMapper.queryTypeInfoAll(name);
+        // PageInfo<TypeInfo> pageInfo = new PageInfo<>(list);
+        // return pageInfo;
+
+        // 手动分页实现
+        int offset = (pageNum - 1) * limit;
+        List<TypeInfo> list = typeInfoMapper.queryTypeInfoAll(name, offset, limit);
+        int totalCount = typeInfoMapper.countTypeInfoAll(name);
+
+        PageInfo<TypeInfo> pageInfo = new PageInfo<>();
+        pageInfo.setList(list);
+        pageInfo.setTotal(totalCount); // 设置总记录数
+        pageInfo.setPageNum(pageNum);
+        pageInfo.setPageSize(limit);
+        pageInfo.setPages((totalCount + limit - 1) / limit); // 计算总页数
+        pageInfo.setHasPreviousPage(pageNum > 1);
+        pageInfo.setHasNextPage(pageNum < pageInfo.getPages());
+        pageInfo.setIsFirstPage(pageNum == 1);
+        pageInfo.setIsLastPage(pageNum == pageInfo.getPages());
+
+        return pageInfo;
     }
 
     @Override
@@ -41,9 +61,9 @@ public class TypeInfoServiceImpl implements TypeInfoService {
 
     @Override
     public void deleteTypeByIds(List<String> id) {
-        List<Integer> list=new ArrayList<>();
-        for(String cid:id){
-            int id2= Integer.valueOf(cid);
+        List<Integer> list = new ArrayList<>();
+        for (String cid : id) {
+            int id2 = Integer.valueOf(cid);
             list.add(id2);
         }
         typeInfoMapper.deleteTypeByIds(list);

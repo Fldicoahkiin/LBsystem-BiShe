@@ -21,7 +21,7 @@ public class AdminFeedbackController {
     /**
      * 跳转到管理员反馈管理页面
      */
-    @GetMapping("/feedbackList")
+    @GetMapping("/admin/feedbackList")
     public String feedbackList() {
         return "admin/feedbackList";
     }
@@ -42,7 +42,7 @@ public class AdminFeedbackController {
     /**
      * 根据 ID 列表批量删除反馈
      */
-    @PostMapping("/deleteFeedbacks")
+    @PostMapping("/admin/deleteFeedbacks")
     @ResponseBody
     public DataInfo deleteFeedbacks(@RequestParam("ids") List<Integer> ids) {
         try {

@@ -37,7 +37,7 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">异常备注</label>
         <div class="layui-input-block">
-            <textarea name="remarks" class="layui-textarea" > </textarea>
+            <textarea name="exceptRemarks" class="layui-textarea" > </textarea>
         </div>
     </div>
 

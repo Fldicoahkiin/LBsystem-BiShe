@@ -57,7 +57,12 @@ public interface ReaderInfoMapper {
     /**
      * 查询所有记录信息
      */
-    List<ReaderInfo> queryAllReaderInfo(ReaderInfo readerInfo);
+    List<ReaderInfo> queryAllReaderInfo(@Param("readerInfo") ReaderInfo readerInfo, @Param("offset") Integer offset, @Param("limit") Integer limit);
+
+    /**
+     * 新增：查询总记录数 (支持条件查询)
+     */
+    int countAllReaderInfo(@Param("readerInfo") ReaderInfo readerInfo);
 
     /**
      * 根据用户名和密码查询用户信息

@@ -16,7 +16,8 @@ public interface FeedbackMapper {
      * 查询反馈列表（带分页和查询条件）
      * 连接查询读者姓名
      */
-    List<Feedback> queryFeedbackList(Feedback feedback);
+    List<Feedback> queryFeedbackList(@Param("feedback") Feedback feedback, @Param("offset") Integer offset,
+            @Param("limit") Integer limit);
 
     /**
      * 根据ID查询反馈详情
@@ -32,7 +33,7 @@ public interface FeedbackMapper {
     /**
      * 查询总数（用于分页）
      */
-    int queryFeedbackCount(Feedback feedback);
+    int queryFeedbackCount(@Param("feedback") Feedback feedback);
 
     /**
      * 根据 ID 列表批量删除反馈

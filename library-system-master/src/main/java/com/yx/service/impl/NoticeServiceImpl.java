@@ -18,9 +18,19 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public PageInfo<Notice> queryAllNotice(Notice notice, Integer pageNum, Integer limit) {
-        PageHelper.startPage(pageNum,limit);//业务层实现分页
-        List<Notice> noticeList = noticeMapper.queryNoticeAll(notice);
-        return new PageInfo<>(noticeList);
+        // 手动分页实现
+        int offset = (pageNum - 1) * limit;
+        String topic = (notice != null) ? notice.getTopic() : null;
+        List<Notice> list = noticeMapper.queryNoticeAll(topic, offset, limit);
+        int totalCount = noticeMapper.countNoticeAll(topic);
+
+        PageInfo<Notice> pageInfo = new PageInfo<>();
+        pageInfo.setTotal(totalCount);
+        pageInfo.setList(list);
+        pageInfo.setPageNum(pageNum);
+        pageInfo.setPageSize(limit);
+
+        return pageInfo;
     }
 
     @Override
@@ -35,7 +45,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void deleteNoticeByIds(List<String> ids) {
-        for (String id : ids){
+        for (String id : ids) {
             noticeMapper.deleteByPrimaryKey(Integer.parseInt(id));
         }
     }

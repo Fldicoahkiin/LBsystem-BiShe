@@ -152,7 +152,10 @@ public class LendListServiceImpl implements LendListService {
             // Add null check for bookInfo
             if (bookInfo != null) {
                 bookInfo.setStatus(0);// 该为未借出
+                log.info("[deleteLendListById] Updating book status to 0 for bookId: {}", bid);
                 bookInfoMapper.updateByPrimaryKey(bookInfo);
+            } else {
+                log.warn("[deleteLendListById] BookInfo not found for bookId: {}, cannot update status.", bid);
             }
         }
     }
@@ -175,7 +178,10 @@ public class LendListServiceImpl implements LendListService {
             // Add null check for bookInfo
             if (bookInfo != null) {
                 bookInfo.setStatus(0);// 该为未借出
+                log.info("[updateLendListSubmit] Updating book status to 0 for bookId: {}", bid);
                 bookInfoMapper.updateByPrimaryKey(bookInfo);
+            } else {
+                log.warn("[updateLendListSubmit] BookInfo not found for bookId: {}, cannot update status.", bid);
             }
         }
     }
@@ -189,15 +195,19 @@ public class LendListServiceImpl implements LendListService {
         lend.setExceptRemarks(lendList.getExceptRemarks());
         lend.setBookId(lendList.getBookId());
         lendListMapper.updateLendListSubmit(lend);
-        // 判断异常还书 如果是延期或者正常还书，需要更改书的状态
-        if (lend.getBackType() == 0 || lend.getBackType() == 1) {
-            BookInfo bookInfo = bookInfoMapper.selectByPrimaryKey(lend.getBookId());
-            // Add null check for bookInfo
-            if (bookInfo != null) {
-                bookInfo.setStatus(0);// 该为未借出
-                bookInfoMapper.updateByPrimaryKey(bookInfo);
-            }
+
+        // 不再判断异常还书类型，始终将图书状态恢复为未借出
+        // if (lend.getBackType() == 0 || lend.getBackType() == 1) {
+        BookInfo bookInfo = bookInfoMapper.selectByPrimaryKey(lend.getBookId());
+        // Add null check for bookInfo
+        if (bookInfo != null) {
+            bookInfo.setStatus(0);// 改为未借出
+            log.info("[backBook] Updating book status to 0 for bookId: {}", lend.getBookId());
+            bookInfoMapper.updateByPrimaryKey(bookInfo);
+        } else {
+            log.warn("[backBook] BookInfo not found for bookId: {}, cannot update status.", lend.getBookId());
         }
+        // }
 
     }
 

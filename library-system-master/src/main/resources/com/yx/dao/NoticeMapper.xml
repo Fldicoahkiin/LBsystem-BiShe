@@ -131,14 +131,29 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="queryNoticeAll" parameterType="com.yx.po.Notice" resultType="com.yx.po.Notice">
-    select * from notice
+  <!-- 查询所有公告，支持按标题模糊查询 -->
+  <select id="queryNoticeAll" parameterType="com.yx.po.Notice" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from notice
     <where>
       <if test="topic!=null and topic!=''">
-            and topic like '%${topic}%'
+        topic like concat('%',#{topic},'%')
       </if>
     </where>
     order by createDate desc
+    LIMIT #{offset}, #{limit} <!-- 添加 LIMIT 子句 -->
+  </select>
+
+  <!-- 新增：查询总记录数 -->
+  <select id="countNoticeAll" resultType="int" parameterType="com.yx.po.Notice">
+    select count(*)
+    from notice
+    <where>
+      <if test="topic!=null and topic!=''">
+        topic like concat('%',#{topic},'%')
+      </if>
+    </where>
   </select>
 
 </mapper>

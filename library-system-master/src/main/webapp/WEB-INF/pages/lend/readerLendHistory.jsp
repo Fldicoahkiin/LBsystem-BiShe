@@ -65,17 +65,17 @@
                                          <span class="layui-badge layui-bg-gray">延迟还书</span>
                                      </c:when>
                                      <c:when test="${item.backType == 2}">
-                                         <span class="layui-badge layui-bg-orange">逾期还书</span> <%-- 与SQL中类型对应 --%>
+                                         <span class="layui-badge layui-bg-orange">破损还书</span> <%-- 修正为 破损还书 --%>
                                      </c:when>
                                       <c:when test="${item.backType == 3}">
-                                          <span class="layui-badge layui-bg-orange">异常还书</span> <%-- 与SQL中类型对应 --%>
+                                          <span class="layui-badge layui-bg-orange">丢失图书</span> <%-- 修正为 丢失图书 --%>
                                       </c:when>
                                      <c:otherwise>
-                                          <span class="layui-badge">未知</span>
+                                          <span class="layui-badge">未知</span> <%-- 添加未知状态 --%>
                                      </c:otherwise>
                                 </c:choose>
                             </td>
-                             <td>${item.exceptRemarks}</td>
+                             <td>${item.exceptRemarks}</td> <%-- 确保使用 exceptRemarks --%>
                         </tr>
                     </c:forEach>
                 </c:when>
