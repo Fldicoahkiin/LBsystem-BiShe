@@ -20,8 +20,17 @@
                 <!--声明类型转换，若返回的是json就需要加这个进行转换-->
                 <property name="supportedMediaTypes">
                     <list>
-                        <value>application/json</value>
+                        <value>application/json;charset=UTF-8</value>
                     </list>
+                </property>
+                <property name="fastJsonConfig">
+                    <bean class="com.alibaba.fastjson.support.config.FastJsonConfig">
+                        <property name="serializerFeatures">
+                            <list>
+                                <value>DisableCircularReferenceDetect</value>
+                            </list>
+                        </property>
+                    </bean>
                 </property>
             </bean>
         </mvc:message-converters>

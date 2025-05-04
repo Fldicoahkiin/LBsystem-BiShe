@@ -182,13 +182,13 @@
   <select id="queryLendListAll" parameterType="com.yx.po.LendList" resultMap="queryLendListAllMap">
     SELECT 
       lend.*,
-      book.name as bookName,
+    book.name as bookName,
       book.author as bookAuthor,
       book.isbn as bookIsbn,
       book.type_id as typeId,  -- Select book's type_id
       type.name as typeName,   -- Select type's name
-      reader.realName as realName,
-      reader.readerNumber
+    reader.realName as realName,
+    reader.readerNumber
     FROM lend_list lend 
     LEFT JOIN book_info book ON book.id = lend.bookId
     LEFT JOIN reader_info reader ON reader.id = lend.readerId
@@ -285,13 +285,13 @@
       book.type_id AS `bookInfo.typeId`,
       type.name AS `bookInfo.typeInfo.name`
     FROM
-      lend_list lend
+    lend_list lend
     LEFT JOIN reader_info reader ON reader.id = lend.readerId
     LEFT JOIN book_info book ON book.id = lend.bookId
     LEFT JOIN type_info type ON book.type_id = type.id
     <where>
       <if test="bid!=null">and book.id=#{bid} </if>
-      <if test="rid!=null">and reader.id=#{rid} </if>
+    <if test="rid!=null">and reader.id=#{rid} </if>
     </where>
     order by lend.id desc
   </select>
