@@ -787,7 +787,7 @@ VALUES (
 -- ============================================================
 DROP TABLE IF EXISTS `lend_list`;
 CREATE TABLE `lend_list` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `bookId` int(11) NOT NULL,
   `readerId` int(11) NOT NULL,
   `lendDate` datetime(0) NOT NULL,
