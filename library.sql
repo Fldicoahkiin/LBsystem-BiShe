@@ -5,7 +5,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ============================================================
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `adminType` int(11) NULL DEFAULT NULL,
@@ -28,7 +28,7 @@ VALUES (1, 'admin', '123456', 1),
 -- ============================================================
 DROP TABLE IF EXISTS `reader_info`;
 CREATE TABLE `reader_info` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `realName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -321,7 +321,7 @@ VALUES (
 -- ============================================================
 DROP TABLE IF EXISTS `type_info`;
 CREATE TABLE `type_info` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `remarks` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -357,7 +357,7 @@ VALUES (1, '小说', '各类虚构文学作品'),
 -- ============================================================
 DROP TABLE IF EXISTS `book_info`;
 CREATE TABLE `book_info` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `author` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `publish` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -1191,7 +1191,7 @@ WHERE id IN (
 -- ============================================================
 DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -1275,7 +1275,7 @@ VALUES (
 -- ============================================================
 DROP TABLE IF EXISTS `feedback`;
 CREATE TABLE `feedback` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `reader_id` int(11) NOT NULL,
   `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `submission_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -17,7 +17,7 @@
         f.id, f.reader_id, f.content, f.submission_time
     </sql>
 
-    <insert id="insertFeedback" parameterType="com.yx.po.Feedback">
+    <insert id="insertFeedback" parameterType="com.yx.po.Feedback" useGeneratedKeys="true" keyProperty="id">
         insert into feedback (reader_id, content)
         values (#{readerId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
     </insert>
